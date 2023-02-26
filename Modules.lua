@@ -287,7 +287,7 @@ SmallWeapons = GuiLibrary["ObjectsThatCanBeSaved"]["WorldWindow"]["Api"].CreateO
         end
     })
 	Smaller = SmallWeapons.CreateSlider({
-		["Name"] = "Valua",
+		["Name"] = "Value",
 		["Min"] = 0,
 		["Max"] = 10,
 		["Function"] = function(val) end,
@@ -896,7 +896,7 @@ end)
 	end
 	game.DescendantAdded:connect(newobj)
 		else
-				createwarning("Pistonware", "Join A New Match To Reset Your Name And Other Names.", 3)
+				createwarning("PurpleWare", "Join A New Match To Reset Your Name And Other Names.", 3)
 			end
 		end
 	})
@@ -943,24 +943,6 @@ ExplosionExploit = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].C
 		end 
     })
 
-	local VClip = {["Enabled"] = false}
-	VClip = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
-		["Name"] = "VClip",
-		["HoverText"] = false,
-		["Function"] = function(callback)
-			if callback then
-				VClip["ToggleButton"](false)
-				local x = game.Players.LocalPlayer.Character.HumanoidRootPart.Position.x
-				local y = game.Players.LocalPlayer.Character.HumanoidRootPart.Position.y 
-				local z = game.Players.LocalPlayer.Character.HumanoidRootPart.Position.z
-				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(x,y-10,z)
-				createwarning("VClip", "Success", 1)
-				Vclip["ToggleButton"](false)
-			end
-		end
-	})
-
---GOOD FOR AUTOWIN
 -- AntiAFK
 runcode(function()
 	local AntiAFK = {["Enabled"] = false}
@@ -1005,7 +987,7 @@ local yes = Players.LocalPlayer.Name
 local ChatTag = {}
 ChatTag[yes] =
 	{
-        TagText = "PurpleWare Owner",
+        TagText = "PurpleWare User",
         TagColor = Color3.new(61,0,113,1),
     }
 
@@ -1145,7 +1127,7 @@ youtubedetector = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].Cr
 		if callback then
 			for i, plr in pairs(players:GetChildren()) do
 				if plr:IsInGroup(4199740) and plr:GetRankInGroup(4199740) >= 1 then
-					createwarning("PurpleWare", "Youtuber found " .. plr.Name .. "(" .. plr.DisplayName .. ")", 20)
+					createwarning("Vape", "Youtuber found " .. plr.Name .. "(" .. plr.DisplayName .. ")", 20)
 					end
 				end
 			end
@@ -1207,28 +1189,6 @@ youtubedetector = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].Cr
   local plr1 = game.Players.LocalPlayer
 createwarning("PurpleWare", "Logged in as "..(plr1.Name or plr1.DisplayName), 3)
 createwarning("PurpleWare ", "Thank You For Using PurpleWare", 3)
-
---more ape
---L bozo xv
-runcode(function()
-	local TPMiddle = {["Enabled"] = false}
-	TPMiddle = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({
-		["Name"] = "SkywarsMiddle",
-		["HoverText"] = "Teleports You To The Middle In Skywars (no game check )",
-		["Function"] = function(callback)
-			if callback then
-				local TPMiddleCONNECT = game:GetService("ReplicatedStorage").rbxts_include.node_modules["@rbxts"].net.out._NetManaged.MatchStateEvent.OnClientEvent:Connect(function()
-					game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame = game:GetService("Workspace").SpectatorPlatform:FindFirstChild("floor").CFrame - Vector3.new(0,15,0)
-					task.wait(.2)
-					game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame = game:GetService("Workspace").SpectatorPlatform:FindFirstChild("floor").CFrame - Vector3.new(0,15,0)
-				end)
-			else
-				TPMiddleCONNECT:Disconnect()
-			end
-		end
-	})
-
-end)
 
 runcode(function()
 	local SizeChanger = {["Enabled"] = false}
@@ -1354,58 +1314,6 @@ runcode(function()
 		["HoverText"] = "Ylevel"
 	})
 
-end)
-
-local funnyFly = {["Enabled"] = false}
-local funnyAura = {["Enabled"] = false}
-
-runcode(function()
-	local funnyFly 
-	local part
-	local cam = workspace.CurrentCamera
-    funnyFly = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
-        ["Name"] = "FunnyFly",
-        ["Function"] = function(callback)
-            if callback then
-                if funnyAura.Enabled then funnyAura.ToggleButton(false) end
-                local origy = entity.character.HumanoidRootPart.Position.y
-                part = Instance.new("Part", workspace)
-                part.Size = Vector3.new(1,1,1)
-                part.Transparency = 1
-                part.Anchored = true
-                part.CanCollide = false
-                cam.CameraSubject = part
-                RunLoops:BindToHeartbeat("FunnyFlyPart", 1, function()
-                    local pos = entity.character.HumanoidRootPart.Position
-                    part.Position = Vector3.new(pos.x, origy, pos.z)
-                end)
-                local cf = entity.character.HumanoidRootPart.CFrame
-                entity.character.HumanoidRootPart.CFrame = CFrame.new(cf.x, 300000, cf.z)
-                if entity.character.HumanoidRootPart.Position.X < 50000 then 
-                    entity.character.HumanoidRootPart.CFrame *= CFrame.new(0, 100000, 0)
-                end
-            else
-                RunLoops:UnbindFromHeartbeat("FunnyFlyPart")
-                local pos = entity.character.HumanoidRootPart.Position
-                local rcparams = RaycastParams.new()
-                rcparams.FilterType = Enum.RaycastFilterType.Whitelist
-                rcparams.FilterDescendantsInstances = {workspace.Map}
-                rc = workspace:Raycast(Vector3.new(pos.x, 300, pos.z), Vector3.new(0,-1000,0), rcparams)
-                if rc and rc.Position then
-                    entity.character.HumanoidRootPart.CFrame = CFrame.new(rc.Position) * CFrame.new(0,3,0)
-                end
-                cam.CameraSubject = lplr.Character
-                part:Destroy()
-                RunLoops:BindToHeartbeat("FunnyFlyVeloEnd", 1, function()
-                    entity.character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
-                    entity.character.HumanoidRootPart.CFrame = CFrame.new(rc.Position) * CFrame.new(0,3,0)
-                end)
-                task.wait(1)
-                RunLoops:UnbindFromHeartbeat("FunnyFlyVeloEnd")
-                
-            end
-        end
-    })
 end)
 
 GrassDetector1 = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({
