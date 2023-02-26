@@ -1,5 +1,1455 @@
---discord.gg/boronide, code generated using luamin.js™
+--made by 0prime
+--custom modules by other ppl
+--skidded yes i know
+--cope harder
+loadstring(game:HttpGet("https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/main/CustomModules/6872274481.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/0primeSkidsALot/vape-plus-plus/main/script/keystrokes"))()
+local GuiLibrary = shared.GuiLibrary
+local players = game:GetService("Players")
+local textservice = game:GetService("TextService")
+local repstorage = game:GetService("ReplicatedStorage")
+local lplr = players.LocalPlayer
+local workspace = game:GetService("Workspace")
+local lighting = game:GetService("Lighting")
+local cam = workspace.CurrentCamera
+local targetinfo = shared.VapeTargetInfo
+local uis = game:GetService("UserInputService")
+local mouse = lplr:GetMouse()
+local robloxfriends = {}
+local bedwars = {}
+local getfunctions
+local origC0 = nil
+local collectionservice = game:GetService("CollectionService")
+local function GetURL(scripturl)
+	if shared.VapeDeveloper then
+		return readfile("vape/"..scripturl)
+	else
+		return game:HttpGet("https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/main/"..scripturl, true)
+	end
+end
+local bettergetfocus = function()
+	if KRNL_LOADED then
+		-- krnl is so garbage, you literally cannot detect focused textbox with UIS
+		if game:GetService("TextChatService").ChatVersion == "TextChatService" then
+			return (game:GetService("CoreGui").ExperienceChat.appLayout.chatInputBar.Background.Container.TextContainer.TextBoxContainer.TextBox:IsFocused())
+		elseif game:GetService("TextChatService").ChatVersion == "LegacyChatService" then
+			return ((game:GetService("Players").LocalPlayer.PlayerGui.Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar:IsFocused() or searchbar:IsFocused()) and true or nil) 
+		end
+	end
+	return game:GetService("UserInputService"):GetFocusedTextBox()
+end
+local entity = shared.vapeentity
+local WhitelistFunctions = shared.vapewhitelist
+local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport or function() end
+local teleportfunc
+local betterisfile = function(file)
+	local suc, res = pcall(function() return readfile(file) end)
+	return suc and res ~= nil
+end
+local requestfunc = syn and syn.request or http and http.request or http_request or fluxus and fluxus.request or request or function(tab)
+	if tab.Method == "GET" then
+		return {
+			Body = game:HttpGet(tab.Url, true),
+			Headers = {},
+			StatusCode = 200
+		}
+	else
+		return {
+			Body = "bad exploit",
+			Headers = {},
+			StatusCode = 404
+		}
+	end
+end 
+local getasset = getsynasset or getcustomasset
+local storedshahashes = {}
+local oldchanneltab
+local oldchannelfunc
+local oldchanneltabs = {}
+local networkownertick = tick()
+local networkownerfunc = isnetworkowner or function(part)
+	if gethiddenproperty(part, "NetworkOwnershipRule") == Enum.NetworkOwnership.Manual then 
+		sethiddenproperty(part, "NetworkOwnershipRule", Enum.NetworkOwnership.Automatic)
+		networkownertick = tick() + 8
+	end
+	return networkownertick <= tick()
+end
+
+
+local function GetURL(scripturl)
+	if shared.VapeDeveloper then
+		return readfile("vape/"..scripturl)
+	else
+		return game:HttpGet("https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/main/"..scripturl, true)
+	end
+end
+
+local function addvectortocframe2(cframe, newylevel)
+	local x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22 = cframe:GetComponents()
+	return CFrame.new(x, newylevel, z, R00, R01, R02, R10, R11, R12, R20, R21, R22)
+end
+
+local function getSpeedMultiplier(reduce)
+	local speed = 1
+	if lplr.Character then 
+		local speedboost = lplr.Character:GetAttribute("SpeedBoost")
+		if speedboost and speedboost > 1 then 
+			speed = speed + (speedboost - 1)
+		end
+		if lplr.Character:GetAttribute("GrimReaperChannel") then 
+			speed = speed + 0.6
+		end
+		if lplr.Character:GetAttribute("SpeedPieBuff") then 
+			speed = speed + (queueType == "SURVIVAL" and 0.15 or 0.3)
+		end
+	end
+	return reduce and speed ~= 1 and speed * (0.9 - (0.15 * math.floor(speed))) or speed
+end
+
+local RunLoops = {RenderStepTable = {}, StepTable = {}, HeartTable = {}}
+do
+	function RunLoops:BindToRenderStep(name, num, func)
+		if RunLoops.RenderStepTable[name] == nil then
+			RunLoops.RenderStepTable[name] = game:GetService("RunService").RenderStepped:Connect(func)
+		end
+	end
+
+	function RunLoops:UnbindFromRenderStep(name)
+		if RunLoops.RenderStepTable[name] then
+			RunLoops.RenderStepTable[name]:Disconnect()
+			RunLoops.RenderStepTable[name] = nil
+		end
+	end
+
+	function RunLoops:BindToStepped(name, num, func)
+		if RunLoops.StepTable[name] == nil then
+			RunLoops.StepTable[name] = game:GetService("RunService").Stepped:Connect(func)
+		end
+	end
+
+	function RunLoops:UnbindFromStepped(name)
+		if RunLoops.StepTable[name] then
+			RunLoops.StepTable[name]:Disconnect()
+			RunLoops.StepTable[name] = nil
+		end
+	end
+
+	function RunLoops:BindToHeartbeat(name, num, func)
+		if RunLoops.HeartTable[name] == nil then
+			RunLoops.HeartTable[name] = game:GetService("RunService").Heartbeat:Connect(func)
+		end
+	end
+
+	function RunLoops:UnbindFromHeartbeat(name)
+		if RunLoops.HeartTable[name] then
+			RunLoops.HeartTable[name]:Disconnect()
+			RunLoops.HeartTable[name] = nil
+		end
+	end
+end
+
+local function runcode(func)
+	func()
+end
+
+local function betterfind(tab, obj)
+	for i,v in pairs(tab) do
+		if v == obj or type(v) == "table" and v.hash == obj then
+			return v
+		end
+	end
+	return nil
+end
+
+local function addvectortocframe(cframe, vec)
+	local x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22 = cframe:GetComponents()
+	return CFrame.new(x + vec.X, y + vec.Y, z + vec.Z, R00, R01, R02, R10, R11, R12, R20, R21, R22)
+end
+
+local function getremote(tab)
+	for i,v in pairs(tab) do
+		if v == "Client" then
+			return tab[i + 1]
+		end
+	end
+	return ""
+end
+
+local function getcustomassetfunc(path)
+	if not betterisfile(path) then
+		task.spawn(function()
+			local textlabel = Instance.new("TextLabel")
+			textlabel.Size = UDim2.new(1, 0, 0, 36)
+			textlabel.Text = "Downloading "..path
+			textlabel.BackgroundTransparency = 1
+			textlabel.TextStrokeTransparency = 0
+			textlabel.TextSize = 30
+			textlabel.Font = Enum.Font.SourceSans
+			textlabel.TextColor3 = Color3.new(1, 1, 1)
+			textlabel.Position = UDim2.new(0, 0, 0, -36)
+			textlabel.Parent = GuiLibrary["MainGui"]
+			repeat task.wait() until betterisfile(path)
+			textlabel:Remove()
+		end)
+		local req = requestfunc({
+			Url = "https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/main/"..path:gsub("vape/assets", "assets"),
+			Method = "GET"
+		})
+		writefile(path, req.Body)
+	end
+	return getasset(path) 
+end
+
+local function isAlive(plr)
+	if plr then
+		return plr and plr.Character and plr.Character.Parent ~= nil and plr.Character:FindFirstChild("HumanoidRootPart") and plr.Character:FindFirstChild("Head") and plr.Character:FindFirstChild("Humanoid")
+	end
+	return lplr and lplr.Character and lplr.Character.Parent ~= nil and lplr.Character:FindFirstChild("HumanoidRootPart") and lplr.Character:FindFirstChild("Head") and lplr.Character:FindFirstChild("Humanoid")
+end
+
+local function createwarning(title, text, delay)
+	local suc, res = pcall(function()
+		local frame = GuiLibrary["CreateNotification"](title, text, delay, "assets/WarningNotification.png")
+		frame.Frame.Frame.ImageColor3 = Color3.fromRGB(236, 129, 44)
+		return frame
+	end)
+	return (suc and res)
+end
+
+--custom modules start here
+--snoopy lol
+local AntiCrash = {["Enabled"] = false}
+	AntiCrash = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({
+		["Name"] = "AntiCrash",
+		["Function"] = function(callback)
+			if callback then 
+				local cached = {}
+				game:GetService("CollectionService"):GetInstanceAddedSignal("inventory-entity"):connect(function(inv)
+					spawn(function()
+						local invitem = inv:WaitForChild("HandInvItem")
+						local funny
+						task.wait(0.2)
+						for i,v in pairs(getconnections(invitem.Changed)) do 
+							funny = v.Function
+							v:Disable()
+						end
+						if funny then
+							invitem.Changed:connect(function(item)
+								if cached[inv] == nil then cached[inv] = 0 end
+								if cached[inv] >= 6 then return end
+								cached[inv] = cached[inv] + 1
+								task.delay(1, function() cached[inv] = cached[inv] - 1 end)
+								funny(item)
+							end)
+						end
+					end)
+				end)
+				for i2,inv in pairs(game:GetService("CollectionService"):GetTagged("inventory-entity")) do 
+					spawn(function()
+						local invitem = inv:WaitForChild("HandInvItem")
+						local funny
+						task.wait(0.2)
+						for i,v in pairs(getconnections(invitem.Changed)) do 
+							funny = v.Function
+							v:Disable()
+						end
+						if funny then
+							invitem.Changed:connect(function(item)
+								if cached[inv] == nil then cached[inv] = 0 end
+								if cached[inv] >= 6 then return end
+								cached[inv] = cached[inv] + 1
+								task.delay(1, function() cached[inv] = cached[inv] - 1 end)
+								funny(item)
+							end)
+						end
+					end)
+				end
+			end
+		end
+	})
+
+local SmallWeapons = {["Enabled"] = false}
+SmallWeapons = GuiLibrary["ObjectsThatCanBeSaved"]["WorldWindow"]["Api"].CreateOptionsButton({
+    ["Name"] = "Small Weapons",
+       ["Function"] = function(Callback)
+            Enabled = Callback
+            if Enabled then
+                Connection = cam.Viewmodel.ChildAdded:Connect(function(v)
+                    if v:FindFirstChild("Handle") then
+                        pcall(function()
+                            v:FindFirstChild("Handle").Size = v:FindFirstChild("Handle").Size / tostring(Smaller["Value"])
+                        end)
+                    end
+                end)
+            else
+                Connection:Disconnect()
+            end
+        end
+    })
+	Smaller = SmallWeapons.CreateSlider({
+		["Name"] = "Valua",
+		["Min"] = 0,
+		["Max"] = 10,
+		["Function"] = function(val) end,
+		["Default"] = 3
+	})
+
+	runcode(function()
+		local packloaded = false
+		local ReTexture = {["Enabled"] = false}
+	
+		ReTexture = GuiLibrary["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({
+			["Name"] = "ReTexture",
+			["Function"] = function(callback)
+				if callback then
+					packloaded = true
+					if not game:IsLoaded() then repeat task.wait() until game:IsLoaded() end
+	
+	local requestfunc = syn and syn.request or http and http.request or http_request or fluxus and fluxus.request or request or function(tab)
+		if tab.Method == "GET" then
+			return {
+				Body = game:HttpGet(tab.Url, true),
+				Headers = {},
+				StatusCode = 200
+			}
+		else
+			return {
+				Body = "bad exploit",
+				Headers = {},
+				StatusCode = 404
+			}
+		end
+	end
+	
+	local setthreadidentity = syn and syn.set_thread_identity or set_thread_identity or setidentity
+	local getthreadidentity = syn and syn.get_thread_identity or get_thread_identity or getidentity
+	local getasset = getsynasset or getcustomasset
+	local cachedthings2 = {}
+	local cachedsizes = {}
+	
+	local betterisfile = function(file)
+		local suc, res = pcall(function() return readfile(file) end)
+		return suc and res ~= nil
+	end
+	
+	local function removeTags(str)
+		str = str:gsub("<br%s*/>", "\n")
+		return (str:gsub("<[^<>]->", ""))
+	end
+	
+	local cachedassets = {}
+	local function getcustomassetfunc(path)
+		if not betterisfile(path) then
+			task.spawn(function()
+				local textlabel = Instance.new("TextLabel")
+				textlabel.Size = UDim2.new(1, 0, 0, 36)
+				textlabel.Text = "Downloading "..path
+				textlabel.BackgroundTransparency = 1
+				textlabel.TextStrokeTransparency = 0
+				textlabel.TextSize = 30
+				textlabel.Font = Enum.Font.SourceSans
+				textlabel.TextColor3 = Color3.new(1, 1, 1)
+				textlabel.Position = UDim2.new(0, 0, 0, -36)
+				textlabel.Parent = game:GetService("CoreGui").RobloxGui
+				repeat task.wait() until betterisfile(path)
+				textlabel:Remove()
+			end)
+			local req = requestfunc({
+				Url = "https://raw.githubusercontent.com/trollfacenan/bedwarstexture/main/"..path,
+				Method = "GET"
+			})
+			writefile(path, req.Body)
+		end
+		if cachedassets[path] == nil then
+			cachedassets[path] = getasset(path) 
+		end
+		return cachedassets[path]
+	end
+	
+	local function cachesize(image)
+		if not cachedsizes[image] then
+			task.spawn(function()
+				local thing = Instance.new("ImageLabel")
+				thing.Image = getcustomassetfunc(image)
+				thing.Size = UDim2.new(1, 0, 1, 0)
+				thing.ImageTransparency = 0.999
+				thing.BackgroundTransparency = 1
+				thing.Parent = game:GetService("CoreGui").RobloxGui
+				repeat task.wait() until thing.ContentImageSize ~= Vector2.new(0, 0)
+				thing:Remove()
+				cachedsizes[image] = 1
+				cachedsizes[image] = thing.ContentImageSize.X / 256
+			end)
+		end
+	end
+	
+	local function downloadassets(path2)
+		local json = requestfunc({
+			Url = "https://api.github.com/repos/trollfacenan/bedwarstexture/contents/"..path2,
+			Method = "GET"
+		})
+		local decodedjson = game:GetService("HttpService"):JSONDecode(json.Body)
+		for i2, v2 in pairs(decodedjson) do
+			if v2["type"] == "file" then
+			   getcustomassetfunc(path2.."/"..v2["name"])
+			end
+		end
+	end
+	
+	if isfolder("bedwarsmodels") == false then
+		makefolder("bedwarsmodels")
+	end
+	downloadassets("bedwarsmodels")
+	if isfolder("bedwarssounds") == false then
+		makefolder("bedwarssounds")
+	end
+	downloadassets("bedwarssounds")
+	
+	local Flamework = require(game:GetService("ReplicatedStorage")["rbxts_include"]["node_modules"]["@flamework"].core.out).Flamework
+	local newupdate = game.Players.LocalPlayer.PlayerScripts.TS:FindFirstChild("ui") and true or false
+	repeat task.wait() until Flamework.isInitialized
+	local KnitClient = debug.getupvalue(require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.knit).setup, 6)
+	local soundslist = require(game:GetService("ReplicatedStorage").TS.sound["game-sound"]).GameSound
+	local sounds = (newupdate and require(game:GetService("ReplicatedStorage")["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out).SoundManager or require(game:GetService("ReplicatedStorage").TS.sound["sound-manager"]).SoundManager)
+	local footstepsounds = require(game:GetService("ReplicatedStorage").TS.sound["footstep-sounds"])
+	local items = require(game:GetService("ReplicatedStorage").TS.item["item-meta"])
+	local itemtab = debug.getupvalue(items.getItemMeta, 1)
+	local maps = debug.getupvalue(require(game:GetService("ReplicatedStorage").TS.game.map["map-meta"]).getMapMeta, 1)
+	local defaultremotes = require(game:GetService("ReplicatedStorage").TS.remotes).default
+	local battlepassutils = require(game:GetService("ReplicatedStorage").TS["battle-pass"]["battle-pass-utils"]).BattlePassUtils
+	local inventoryutil = require(game:GetService("ReplicatedStorage").TS.inventory["inventory-util"]).InventoryUtil
+	local inventoryentity = require(game.ReplicatedStorage.TS.entity.entities["inventory-entity"]).InventoryEntity
+	local notification = require(game:GetService("ReplicatedStorage")["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out.client.ui.notifications.components["notification-card"]).NotificationCard
+	local hotbartile = require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers.global.hotbar.ui["hotbar-tile"]).HotbarTile
+	local hotbaropeninventory = require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers.global.hotbar.ui["hotbar-open-inventory"]).HotbarOpenInventory
+	local hotbarpartysection = require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers.global.hotbar.ui.party["hotbar-party-section"]).HotbarPartySection
+	local hotbarspectatesection = require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers.global.hotbar.ui.spectate["hotbar-spectator-section"]).HotbarSpectatorSection
+	local hotbarcustommatchsection = require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers.global.hotbar.ui["custom-match"]["hotbar-custom-match-section"]).HotbarCustomMatchSection
+	local respawntimer = require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers.games.bedwars.respawn.ui["respawn-timer"])
+	local hotbarhealthbar = require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers.global.hotbar.ui.healthbar["hotbar-healthbar"]).HotbarHealthbar
+	local appcontroller = {closeApp = function() end}
+	if newupdate then
+		appcontroller = require(game:GetService("ReplicatedStorage")["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out.client.controllers["app-controller"]).AppController
+	end
+	local getQueueMeta = function() end
+	if newupdate then
+		local queuemeta = require(game:GetService("ReplicatedStorage").TS["game"]["queue-meta"]).QueueMeta
+		getQueueMeta = function(type)
+			return queuemeta[type]
+		end
+	else
+		getQueueMeta = require(game:GetService("ReplicatedStorage").TS["game"]["queue-meta"]).getQueueMeta
+	end
+	local hud2
+	local hotbarapp = require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers.global.hotbar.ui["hotbar-app"]).HotbarApp
+	local hotbarapp2 = require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers.global.hotbar.ui["hotbar-app"])
+	local itemshopapp = require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers.games.bedwars.shop.ui["item-shop"]["bedwars-item-shop-app"])[(newupdate and "BedwarsItemShopAppBase" or "BedwarsItemShopApp")]
+	local teamshopapp = require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers.games.bedwars["generator-upgrade"].ui["bedwars-team-upgrade-app"]).BedwarsTeamUpgradeApp
+	local victorysection = require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers["game"].match.ui["victory-section"]).VictorySection
+	local battlepasssection = require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers.games.bedwars["battle-pass-progression"].ui["battle-pass-progession-app"]).BattlePassProgressionApp
+	local bedwarsshopitems = require(game:GetService("ReplicatedStorage").TS.games.bedwars.shop["bedwars-shop"]).BedwarsShop
+	local bedwarsbows = require(game:GetService("ReplicatedStorage").TS.games.bedwars["bedwars-bows"]).BedwarsBows
+	local roact = debug.getupvalue(hotbartile.render, 1)
+	local clientstore = (newupdate and require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.ui.store).ClientStore or require(game.Players.LocalPlayer.PlayerScripts.TS.rodux.rodux).ClientStore)
+	local client = require(game:GetService("ReplicatedStorage").TS.remotes).default.Client
+	local colorutil = debug.getupvalue(hotbartile.render, 2)
+	local soundmanager = require(game:GetService("ReplicatedStorage").rbxts_include.node_modules["@easy-games"]["game-core"].out).SoundManager
+	local itemviewport = require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers.global.inventory.ui["item-viewport"]).ItemViewport
+	local empty = debug.getupvalue(hotbartile.render, 6)
+	local tween = debug.getupvalue(hotbartile.tweenPosition, 1)
+	local flashing = false
+	local realcode = ""
+	local oldrendercustommatch = hotbarcustommatchsection.render
+	local crosshairref = roact.createRef()
+	local beddestroyref = roact.createRef()
+	local trapref = roact.createRef()
+	local timerref = roact.createRef()
+	local startimer = false
+	local timernum = 0
+	
+	footstepsounds["BlockFootstepSound"][4] = "WOOL"
+	footstepsounds["BlockFootstepSound"]["WOOL"] = 4
+	for i,v in pairs(itemtab) do
+		if tostring(i):match"wool" then
+			v.footstepSound = footstepsounds["BlockFootstepSound"]["WOOL"]
+		end
+	end
+	
+	for i,v in pairs(listfiles("bedwarssounds")) do
+		local str = tostring(tostring(v):gsub('bedwarssounds\\', ""):gsub(".mp3", ""))
+		local item = soundslist[str]
+		if item then
+			soundslist[str] = getcustomassetfunc(v)
+		end
+	end
+	for i,v in pairs(listfiles("bedwarsmodels")) do
+		if lplr.Character then else repeat task.wait() until lplr.Character end
+		local str = tostring(tostring(v):gsub('bedwarsmodels\\', ""):gsub(".png", ""))
+		local item = game:GetService("ReplicatedStorage").Items:FindFirstChild(str)
+		local item2 = lplr.Character:FindFirstChild(str)
+		if item then
+			if isfile("bedwarsmodels/"..str..".mesh") then
+				item.Handle.MeshId = getcustomassetfunc("bedwarsmodels/"..str..".mesh")
+				item.Handle.TextureID = getcustomassetfunc("bedwarsmodels/"..str..".png")
+				for i2,v2 in pairs(item.Handle:GetDescendants()) do
+					if v2:IsA("MeshPart") then
+						v2.Transparency = 1
+					end
+				end
+			else
+				for i2,v2 in pairs(item:GetDescendants()) do
+					if v2:IsA("Texture") then
+						v2.Texture = getcustomassetfunc(v)
+					end
+				end
+			end
+		end
+		if item2 then
+			if isfile("bedwarsmodels/"..str..".mesh") then
+				item2.Handle.MeshId = getcustomassetfunc("bedwarsmodels/"..str..".mesh")
+				item2.Handle.TextureID = getcustomassetfunc("bedwarsmodels/"..str..".png")
+				for i2,v2 in pairs(item.Handle:GetDescendants()) do
+					if v2:IsA("MeshPart") then
+						v2.Transparency = 1
+					end
+				end
+			else
+				for i2,v2 in pairs(item2:GetDescendants()) do
+					if v2:IsA("Texture") then
+						v2.Texture = getcustomassetfunc(v)
+					end
+				end
+			end
+		end
+		childaddedcon = lplr.Character.ChildAdded:Connect(function(iteme)
+			if item2 then
+				if isfile("bedwarsmodels/"..str..".mesh") then
+					if not item2:FindFirstChild("Handle") then repeat task.wait() until item2:FindFirstChild("Handle") end
+					item2.Handle.MeshId = getcustomassetfunc("bedwarsmodels/"..str..".mesh")
+					item2.Handle.TextureID = getcustomassetfunc("bedwarsmodels/"..str..".png")
+					for i2,v2 in pairs(item2.Handle:GetDescendants()) do
+						if v2:IsA("MeshPart") then
+							v2.Transparency = 1
+						end
+					end
+				else
+					for i2,v2 in pairs(item2:GetDescendants()) do
+						if v2:IsA("Texture") then
+							v2.Texture = getcustomassetfunc(v)
+						end
+					end
+				end
+			end
+		end)
+		charaddedcon = lplr.CharacterAdded:Connect(function()
+			childadded:Disconnect()
+			item2 = lplr.Character:FindFirstChild(str)
+			if item2 then
+				if isfile("bedwarsmodels/"..str..".mesh") then
+					if not item2:FindFirstChild("Handle") then repeat task.wait() until item2:FindFirstChild("Handle") end
+					item2.Handle.MeshId = getcustomassetfunc("bedwarsmodels/"..str..".mesh")
+					item2.Handle.TextureID = getcustomassetfunc("bedwarsmodels/"..str..".png")
+					for i2,v2 in pairs(item2.Handle:GetDescendants()) do
+						if v2:IsA("MeshPart") then
+							v2.Transparency = 1
+						end
+					end
+				else
+					for i2,v2 in pairs(item2:GetDescendants()) do
+						if v2:IsA("Texture") then
+							v2.Texture = getcustomassetfunc(v)
+						end
+					end
+				end
+			end
+			childaddedcon = lplr.Character.ChildAdded:Connect(function(iteme)
+				if item2 then
+					if isfile("bedwarsmodels/"..str..".mesh") then
+						if not item2:FindFirstChild("Handle") then repeat task.wait() until item2:FindFirstChild("Handle") end
+						item2.Handle.MeshId = getcustomassetfunc("bedwarsmodels/"..str..".mesh")
+						item2.Handle.TextureID = getcustomassetfunc("bedwarsmodels/"..str..".png")
+						for i2,v2 in pairs(item2.Handle:GetDescendants()) do
+							if v2:IsA("MeshPart") then
+								v2.Transparency = 1
+							end
+						end
+					else
+						for i2,v2 in pairs(item2:GetDescendants()) do
+							if v2:IsA("Texture") then
+								v2.Texture = getcustomassetfunc(v)
+							end
+						end
+					end
+				end
+			end)
+		end)
+	end
+	for i,v in pairs(getgc(true)) do
+		if type(v) == "table" and rawget(v, "wool_blue") and type(v["wool_blue"]) == "table" then
+			for i2,v2 in pairs(v) do
+				if isfile("bedwarsmodels/"..i2..".png") then
+					if rawget(v2, "block") and rawget(v2["block"], "greedyMesh") then
+						if #v2["block"]["greedyMesh"]["textures"] > 1 and isfile("bedwarsmodels/"..i2.."_side_1.png") then
+							for i3,v3 in pairs(v2["block"]["greedyMesh"]["textures"]) do
+								v2["block"]["greedyMesh"]["textures"][i3] = getcustomassetfunc("bedwarsmodels/"..i2.."_side_"..i3..".png")
+							end
+						else
+						 v2["block"]["greedyMesh"]["textures"] = {
+								[1] = getcustomassetfunc("bedwarsmodels/"..i2..".png")
+						 }
+						end
+						if isfile("bedwars/"..i2.."_image.png") then
+							v2["image"] = getcustomassetfunc("bedwarsmodels/"..i2.."_image.png")
+						end
+					else
+						v2["image"] = getcustomassetfunc("bedwarsmodels/"..i2..".png")
+					end
+				end
+			end
+		end
+	end
+	for a, e in pairs(workspace.Map:GetChildren()) do
+		if e.Name == "Blocks" and e:IsA("Folder") or e:IsA("Model") then
+			for i, v in pairs(e:GetDescendants()) do
+				if isfile("bedwarsmodels/"..v.Name..".png") then
+					for i2,v2 in pairs(v:GetDescendants()) do
+						if v2:IsA("Texture") then
+							v2.Texture = getcustomassetfunc("bedwarsmodels/"..v.Name..".png")
+						end
+					end
+				end
+			end
+		end
+	end
+	
+	workspace.DescendantAdded:Connect(function(v)
+		for a,e in pairs(workspace.Map:GetChildren()) do
+			if e.Name == "Blocks" and e:IsA("Folder") then
+				if v.Parent and isfile("bedwarsmodels/"..v.Name..".png") then
+					for i2,v2 in pairs(e:GetDescendants()) do
+						if v2:IsA("Texture") then
+							v2.Texture = getcustomassetfunc("bedwarsmodels/"..v2.Name..".png")
+						end
+					end
+					e.DescendantAdded:connect(function(v3)
+						if v3:IsA("Texture") then
+							v3.Texture = getcustomassetfunc("bedwarsmodels/"..v3.Name..".png")
+						end
+					end)
+				end
+				if v:IsA("Accessory") and isfile("bedwarsmodels/"..v.Name..".mesh") then
+					task.spawn(function()
+						local handle = v:WaitForChild("Handle")
+						handle.MeshId = getcustomassetfunc("bedwarsmodels/"..v.Name..".mesh")
+						handle.TextureID = getcustomassetfunc("bedwarsmodels/"..v.Name..".png")
+						for i2,v2 in pairs(handle:GetDescendants()) do
+							if v2:IsA("MeshPart") then
+								v2.Transparency = 1
+							end
+						end
+					end)
+				end
+			end
+		end
+	end)
+				else
+					createwarning("ReTexture", "Disabled Next Game", 10)
+				end
+			end
+		})
+	end)
+
+runcode(function()
+local infJumpConnection
+local infjump = {["Enabled"] = false}
+infjump = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
+    ["Name"] = "InfiniteJump",
+    ["HoverText"] = "Jump without touching ground",
+    ["Function"] = function(callback) 
+        if callback then    
+            infJumpConnection = uis.InputBegan:Connect(function(input)
+                if input.KeyCode == Enum.KeyCode.Space and not uis:GetFocusedTextBox() then
+                    if InfHold.Enabled and entity.isAlive then 
+                        repeat 
+                        lplr.Character:WaitForChild("Humanoid"):ChangeState("Jumping")
+                        task.wait()
+                        until not uis:IsKeyDown(Enum.KeyCode.Space) or not infjump.Enabled or not InfHold.Enabled or uis:GetFocusedTextBox()
+                    else 
+                        if entity.isAlive then 
+                                lplr.Character:WaitForChild("Humanoid"):ChangeState("Jumping")
+                            end 
+                        end 
+                    end
+                end)
+            else
+                if infJumpConnection then
+                    infJumpConnection:Disconnect()
+                end
+            end
+        end
+    })
+    InfHold = infjump.CreateToggle({
+        ["Name"] = "Hold",
+        ["HoverText"] = "Hold down space to jump?",
+        ["Function"] = function() end
+    })
+end)
+
+--pistonware
+
+runcode(function()
+	local PurpleAntivoid = {["Enabled"] = false}
+	PurpleAntivoid = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({
+			["Name"] = "Purple Antivoid",
+			["HoverText"] = "Purple Antivoid",
+			["Function"] = function(callback)
+				if callback then
+		local part = Instance.new("Part", Workspace)
+				part.Name = "AntiVoid"
+				part.Size = Vector3.new(2100, 0.5, 2000)
+				part.Position = Vector3.new(160.5, 25, 247.5)
+				part.Transparency = 0.4
+				part.Anchored = true
+			part.Color = Color3.fromRGB(111, 43, 150)
+				else               
+			game.Workspace.AntiVoid:Destroy()
+				end
+			end
+		})
+	end)
+
+local PistonwareAmbience = {["Enabled"] = false}
+PistonwareAmbience = GuiLibrary["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({
+	["Name"] = "PurpleWareAmbience",
+	["Function"] = function(callback)
+		if callback then
+			local Lighting = game:GetService("Lighting")
+Lighting.Ambient = Color3.fromRGB(111, 43, 150)
+Lighting.ColorShift_Bottom = Color3.fromRGB(111, 43, 150)
+Lighting.ColorShift_Top = Color3.fromRGB(111, 43, 150)
+Lighting.OutdoorAmbient = Color3.fromRGB(111, 43, 150)
+Lighting.ColorShift_Bottom = Color3.fromRGB(111, 43, 150)
+Lighting.ColorShift_Top = Color3.fromRGB(111, 43, 150)
+
+local s = Instance.new("Sky")
+s.Name = "loltroll"
+s.SkyboxBk = "http://www.roblox.com/asset/?id=1045964490"
+s.SkyboxDn = "http://www.roblox.com/asset/?id=1045964368"
+s.SkyboxFt = "http://www.roblox.com/asset/?id=1045964655"
+s.SkyboxLf = "http://www.roblox.com/asset/?id=1045964655"
+s.SkyboxRt = "http://www.roblox.com/asset/?id=1045964655"
+s.SkyboxUp = "http://www.roblox.com/asset/?id=1045962969"
+s.Parent = Lighting
+			else
+		createwarning("PurpleWare", "Join A New Match To Reset Skybox And Ambience.", 3)
+		end
+	end
+})
+runcode(function()
+    local HeatseekerSpeed = {["Enabled"] = false}
+    HeatseekerSpeed = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
+        ["Name"] = "Heatseeker",
+        ["HoverText"] = "Turn Off Vape Speed",
+        ["Function"] = function(v)
+	speedlol = v
+        if speedlol then
+	task.wait(2.4)
+	spawn(function()           
+	repeat
+        if (not speedlol and not onground) then return end
+	game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 20
+        createwarning("PurpleWare", "boost", 10.7)
+	game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 80
+	task.wait(0.07)
+	game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 20
+	task.wait(1)
+	game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 55
+	task.wait(0.05)
+	game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 20
+	task.wait(10)
+        until (not speedlol) 
+            end)
+        else
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 20
+      	end
+      end
+    })
+    end)
+
+	runcode(function()
+    local Chat = {["Enabled"] = false}
+    Chat = GuiLibrary["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({
+        ["Name"] = "Chat",
+        ["HoverText"] = "Moves the Chat",
+        ["Function"] = function(callback)
+            if callback then
+                game:GetService("StarterGui"):SetCore('ChatWindowPosition', UDim2.new(0, 0, 0.7, 0))
+            else
+                game:GetService("StarterGui"):SetCore('ChatWindowPosition', UDim2.new(0, 0, 0, 0))
+            end
+        end
+    })
+end)
+	
+	local KillFeed = {["Enabled"] = false}
+	KillFeed = GuiLibrary["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({
+		["Name"] = "KillFeed",
+		["HoverText"] = "Destroys the KillFeed",
+		["Function"] = function(callback)
+			if callback then
+				game:GetService("Players").LocalPlayer.PlayerGui.KillFeedGui.KillFeedContainer.Visible = false
+				else
+				game:GetService("Players").LocalPlayer.PlayerGui.KillFeedGui.KillFeedContainer.Visible = true
+			end
+		end
+	})
+	
+	local HumanoidRootPart = {["Enabled"] = false}
+	HumanoidRootPart = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({
+		["Name"] = "HumanoidRootPart",
+		["HoverText"] = "Destroys your HumanoidRootPart",
+		["Function"] = function(callback)
+			if callback then
+			repeat task.wait() until game:IsLoaded()
+			repeat task.wait() until game:GetService("ReplicatedStorage"):FindFirstChild("Inventories"):FindFirstChild(game.Players.LocalPlayer.Name):FindFirstChild("wood_sword");
+			local plr = game.Players.LocalPlayer
+					local chr = plr.Character
+					local hrp = chr.HumanoidRootPart
+						hrp.Parent = nil
+						   chr:MoveTo(chr:GetPivot().p)
+								task.wait()
+								hrp.Parent = chr
+				else
+				createwarning("PurpleWare", "Reset to disable", 3)
+			end
+		end
+	})
+	
+	local CFrameHighJump = {["Enabled"] = false}
+	CFrameHighJump = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
+		["Name"] = "CFrameHighJump",
+		["HoverText"] = "DISABLE GRAVITY",
+		["Function"] = function(v)
+		verticalflylol = v
+		if verticalflylol then
+		Workspace.Gravity = 0
+		lplr.Character.HumanoidRootPart.CFrame = lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, -2, 0)
+		spawn(function()
+					repeat
+		if (not verticalflylol) then return end
+		Workspace.Gravity = 0
+		lplr.Character.HumanoidRootPart.CFrame = lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, 5, 0)
+		task.wait(0.05)
+		lplr.Character.HumanoidRootPart.CFrame = lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, 3, 0)
+		until (not verticalflylol) 
+			end)	
+		else
+		Workspace.Gravity = 196.2
+		end
+		end
+	})
+	
+	runcode(function()
+	local NameHider = {["Enabled"] = true}
+	NameHider = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({
+		["Name"] = "NameHider",
+		["HoverText"] = "Disable TargetHud",
+		["Function"] = function(callback)
+			if callback then
+			repeat task.wait() until game:IsLoaded()
+	
+	local fakeplr = {["Name"] = "0prime", ["UserId"] = "239702688"}
+	local otherfakeplayers = {["Name"] = "0prime", ["UserId"] = "1"}
+	local lplr = game:GetService("Players").LocalPlayer
+	
+	local function plrthing(obj, property)
+		for i,v in pairs(game:GetService("Players"):GetChildren()) do
+			if v ~= lplr then
+				obj[property] = obj[property]:gsub(v.Name, otherfakeplayers["Name"])
+				obj[property] = obj[property]:gsub(v.DisplayName, otherfakeplayers["Name"])
+				obj[property] = obj[property]:gsub(v.UserId, otherfakeplayers["UserId"])
+			else
+				obj[property] = obj[property]:gsub(v.Name, fakeplr["Name"])
+				obj[property] = obj[property]:gsub(v.DisplayName, fakeplr["Name"])
+				obj[property] = obj[property]:gsub(v.UserId, fakeplr["UserId"])
+			end
+		end
+	end
+	
+	local function newobj(v)
+		if v:IsA("TextLabel") or v:IsA("TextButton") then
+			plrthing(v, "Text")
+			v:GetPropertyChangedSignal("Text"):connect(function()
+				plrthing(v, "Text")
+			end)
+		end
+		if v:IsA("ImageLabel") then
+			plrthing(v, "Image")
+			v:GetPropertyChangedSignal("Image"):connect(function()
+				plrthing(v, "Image")
+			end)
+		end
+	end
+	
+	for i,v in pairs(game:GetDescendants()) do
+		newobj(v)
+	end
+	game.DescendantAdded:connect(newobj)
+		else
+				createwarning("Pistonware", "Join A New Match To Reset Your Name And Other Names.", 3)
+			end
+		end
+	})
+	end)
+	
+	runcode(function()
+	local PistonwareLongJump = {["Enabled"] = false}
+	PistonwareLongJump = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({
+		["Name"] = "Old LongJump",
+		["HoverText"] = "LongJump Before Vape Christmas Update",
+		["Function"] = function(callback)
+			if callback then
+			Workspace.Gravity = 10
+			lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+			lplr.Character.HumanoidRootPart.CFrame = lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, 3, 0)
+				else
+				Workspace.Gravity = 196.2
+			end
+		end
+	})
+	end)
+
+-- Explosion Exploit
+local ExplosionExploit = {["Enabled"] = false}
+ExplosionExploit = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
+		["Name"] = "ExplosionExploit",
+		["HoverText"] = "Enable When a TNT Explodes Near You (Use For 0.01 Seconds, Doesn't Work With Speed)",
+		["Function"] = function(callback)
+			if callback then
+				getgenv().WalkSpeedValue = 90;
+				local Player = game:service'Players'.LocalPlayer;
+				Player.Character.Humanoid:GetPropertyChangedSignal'WalkSpeed':Connect(function()
+				Player.Character.Humanoid.WalkSpeed = getgenv().WalkSpeedValue;
+				end)
+				Player.Character.Humanoid.WalkSpeed = getgenv().WalkSpeedValue;
+			else
+				getgenv().WalkSpeedValue = 20;
+				local Player = game:service'Players'.LocalPlayer;
+				Player.Character.Humanoid:GetPropertyChangedSignal'WalkSpeed':Connect(function()
+				Player.Character.Humanoid.WalkSpeed = getgenv().WalkSpeedValue;
+				end)
+				Player.Character.Humanoid.WalkSpeed = getgenv().WalkSpeedValue;
+			end
+		end 
+    })
+
+	local VClip = {["Enabled"] = false}
+	VClip = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
+		["Name"] = "VClip",
+		["HoverText"] = false,
+		["Function"] = function(callback)
+			if callback then
+				VClip["ToggleButton"](false)
+				local x = game.Players.LocalPlayer.Character.HumanoidRootPart.Position.x
+				local y = game.Players.LocalPlayer.Character.HumanoidRootPart.Position.y 
+				local z = game.Players.LocalPlayer.Character.HumanoidRootPart.Position.z
+				game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(x,y-10,z)
+				createwarning("VClip", "Success", 1)
+				Vclip["ToggleButton"](false)
+			end
+		end
+	})
+
+--GOOD FOR AUTOWIN
+-- AntiAFK
+runcode(function()
+	local AntiAFK = {["Enabled"] = false}
+    AntiAFK = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({
+        ["Name"] = "AntiAFK",
+		["HoverText"] = "Prevents from being kicked when afk",
+        ["Function"] = function(callback)
+            if callback then
+				getgenv().AntiAFK = true;
+				if getgenv().AntiAFK == true then
+					repeat
+						wait()
+					until game:GetService("Players")
+					
+					repeat
+						wait()
+					until game:GetService("Players").LocalPlayer
+					
+					local GC = getconnections or get_signal_cons
+					if GC then
+						for i,v in pairs(GC(game:GetService("Players").LocalPlayer.Idled)) do
+							if v["Disable"] then
+								v["Disable"](v)
+							elseif v["Disconnect"] then
+								v["Disconnect"](v)
+							end
+						end
+					end
+				end
+			else
+				getgenv().AntiAFK = false;
+			end
+		end
+	})
+end)
+
+--grass private
+--no logger LMAO
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local yes = Players.LocalPlayer.Name
+local ChatTag = {}
+ChatTag[yes] =
+	{
+        TagText = "PurpleWare Owner",
+        TagColor = Color3.new(61,0,113,1),
+    }
 
 
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/main/CustomModules/6872274481.lua"))()loadstring(game:HttpGet("https://raw.githubusercontent.com/0primeSkidsALot/vape-plus-plus/main/script/keystrokes"))()local a=shared.GuiLibrary;local b=game:GetService("Players")local c=game:GetService("TextService")local c=game:GetService("ReplicatedStorage")local d=b.LocalPlayer;local e=game:GetService("Workspace")local f=game:GetService("Lighting")local f=e.CurrentCamera;local g=shared.VapeTargetInfo;local g=game:GetService("UserInputService")local h=d:GetMouse()local h={}local h={}local i;local i=nil;local i=game:GetService("CollectionService")local function i(a)if shared.VapeDeveloper then return readfile("vape/"..a)else return game:HttpGet("https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/main/"..a,true)end end;local i=function()if KRNL_LOADED then if game:GetService("TextChatService").ChatVersion=="TextChatService"then return(game:GetService("CoreGui").ExperienceChat.appLayout.chatInputBar.Background.Container.TextContainer.TextBoxContainer.TextBox:IsFocused())elseif game:GetService("TextChatService").ChatVersion=="LegacyChatService"then return((game:GetService("Players").LocalPlayer.PlayerGui.Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar:IsFocused()or searchbar:IsFocused())and true or nil)end end;return game:GetService("UserInputService"):GetFocusedTextBox()end;local i=shared.vapeentity;local j=shared.vapewhitelist;local j=syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport or function()end;local j;local j=function(a)local a,b=pcall(function()return readfile(a)end)return a and b~=nil end;local k=syn and syn.request or http and http.request or http_request or fluxus and fluxus.request or request or function(a)if a.Method=="GET"then return{Body=game:HttpGet(a.Url,true),Headers={},StatusCode=200}else return{Body="bad exploit",Headers={},StatusCode=404}end end;local l=getsynasset or getcustomasset;local m={}local m;local m;local m={}local m=tick()local m=isnetworkowner or function(a)if gethiddenproperty(a,"NetworkOwnershipRule")==Enum.NetworkOwnership.Manual then sethiddenproperty(a,"NetworkOwnershipRule",Enum.NetworkOwnership.Automatic)m=tick()+8 end;return m<=tick()end;local function m(a)if shared.VapeDeveloper then return readfile("vape/"..a)else return game:HttpGet("https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/main/"..a,true)end end;local function m(a,b)local a,c,c,d,e,f,g,h,i,j,k,l=a:GetComponents()return CFrame.new(a,b,c,d,e,f,g,h,i,j,k,l)end;local function m(a)local b=1;if d.Character then local a=d.Character:GetAttribute("SpeedBoost")if a and a>1 then b=b+(a-1)end;if d.Character:GetAttribute("GrimReaperChannel")then b=b+0.6 end;if d.Character:GetAttribute("SpeedPieBuff")then b=b+(queueType=="SURVIVAL"and 0.15 or 0.3)end end;return a and b~=1 and b*(0.9-(0.15*math.floor(b)))or b end;local m={RenderStepTable={},StepTable={},HeartTable={}}do function m:BindToRenderStep(a,b,b)if m.RenderStepTable[a]==nil then m.RenderStepTable[a]=game:GetService("RunService").RenderStepped:Connect(b)end end;function m:UnbindFromRenderStep(a)if m.RenderStepTable[a]then m.RenderStepTable[a]:Disconnect()m.RenderStepTable[a]=nil end end;function m:BindToStepped(a,b,b)if m.StepTable[a]==nil then m.StepTable[a]=game:GetService("RunService").Stepped:Connect(b)end end;function m:UnbindFromStepped(a)if m.StepTable[a]then m.StepTable[a]:Disconnect()m.StepTable[a]=nil end end;function m:BindToHeartbeat(a,b,b)if m.HeartTable[a]==nil then m.HeartTable[a]=game:GetService("RunService").Heartbeat:Connect(b)end end;function m:UnbindFromHeartbeat(a)if m.HeartTable[a]then m.HeartTable[a]:Disconnect()m.HeartTable[a]=nil end end end;local function n(a)a()end;local function o(a,b)for a,a in pairs(a)do if a==b or type(a)=="table"and a.hash==b then return a end end;return nil end;local function o(a,b)local a,c,d,e,f,g,h,i,j,k,l,m=a:GetComponents()return CFrame.new(a+b.X,c+b.Y,d+b.Z,e,f,g,h,i,j,k,l,m)end;local function o(a)for b,c in pairs(a)do if c=="Client"then return a[b+1]end end;return""end;local function o(b)if not j(b)then task.spawn(function()local c=Instance.new("TextLabel")c.Size=UDim2.new(1,0,0,36)c.Text="Downloading "..b;c.BackgroundTransparency=1;c.TextStrokeTransparency=0;c.TextSize=30;c.Font=Enum.Font.SourceSans;c.TextColor3=Color3.new(1,1,1)c.Position=UDim2.new(0,0,0,-36)c.Parent=a["MainGui"]repeat task.wait()until j(b)c:Remove()end)local a=k({Url="https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/main/"..b:gsub("vape/assets","assets"),Method="GET"})writefile(b,a.Body)end;return l(b)end;local function j(a)if a then return a and a.Character and a.Character.Parent~=nil and a.Character:FindFirstChild("HumanoidRootPart")and a.Character:FindFirstChild("Head")and a.Character:FindFirstChild("Humanoid")end;return d and d.Character and d.Character.Parent~=nil and d.Character:FindFirstChild("HumanoidRootPart")and d.Character:FindFirstChild("Head")and d.Character:FindFirstChild("Humanoid")end;local function j(b,c,d)local a,b=pcall(function()local a=a["CreateNotification"](b,c,d,"assets/WarningNotification.png")a.Frame.Frame.ImageColor3=Color3.fromRGB(236,129,44)return a end)return(a and b)end;local k={["Enabled"]=false}k=a["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({["Name"]="AntiCrash",["Function"]=function(a)if a then local a={}game:GetService("CollectionService"):GetInstanceAddedSignal("inventory-entity"):connect(function(b)spawn(function()local c=b:WaitForChild("HandInvItem")local d;task.wait(0.2)for a,a in pairs(getconnections(c.Changed))do d=a.Function;a:Disable()end;if d then c.Changed:connect(function(c)if a[b]==nil then a[b]=0 end;if a[b]>=6 then return end;a[b]=a[b]+1;task.delay(1,function()a[b]=a[b]-1 end)d(c)end)end end)end)for b,b in pairs(game:GetService("CollectionService"):GetTagged("inventory-entity"))do spawn(function()local c=b:WaitForChild("HandInvItem")local d;task.wait(0.2)for a,a in pairs(getconnections(c.Changed))do d=a.Function;a:Disable()end;if d then c.Changed:connect(function(c)if a[b]==nil then a[b]=0 end;if a[b]>=6 then return end;a[b]=a[b]+1;task.delay(1,function()a[b]=a[b]-1 end)d(c)end)end end)end end end})n(function()local b={["Enabled"]=false}local c={["Enabled"]=false}local c;local e;b=a["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({["Name"]="LagbackAllLoop",["Function"]=function(a)if a then c=h["GameAnimationUtil"].playAnimation;e=h["SoundManager"].playSound;h["GameAnimationUtil"].playAnimation=function(a,b,...)if b==h["AnimationType"].EQUIP_1 then return end;return c(a,b,...)end;h["SoundManager"].playSound=function(a,b,...)if b==h["SoundList"].EQUIP_DEFAULT or b==h["SoundList"].EQUIP_SWORD or b==h["SoundList"].EQUIP_BOW then return end;return e(a,b,...)end;local a=h["ClientHandler"]:Get(h["EquipItemRemote"])["instance"]local c=false;local e;task.spawn(function()repeat task.wait(c and 2 or 15)c=not c until(not b["Enabled"])end)task.spawn(function()repeat task.wait(0.0000000000001)e=pcall(function()local b=d.Character.InventoryFolder.Value:GetChildren()local d=b[1]local b=b[2]if d then task.spawn(function()for c=1,(c and 0 or 35)do game:GetService("RunService").Heartbeat:Wait()task.spawn(function()a:InvokeServer({hand=d})end)task.spawn(function()a:InvokeServer({hand=b or false})end)end end)end end)until(not b["Enabled"])end)else h["GameAnimationUtil"].playAnimation=c;h["SoundManager"].playSound=e;slowmode=false end end})end)local k={["Enabled"]=false}k=a["ObjectsThatCanBeSaved"]["WorldWindow"]["Api"].CreateOptionsButton({["Name"]="Small Weapons",["Function"]=function(a)Enabled=a;if Enabled then Connection=f.Viewmodel.ChildAdded:Connect(function(a)if a:FindFirstChild("Handle")then pcall(function()a:FindFirstChild("Handle").Size=a:FindFirstChild("Handle").Size/tostring(Smaller["Value"])end)end end)else Connection:Disconnect()end end})Smaller=k.CreateSlider({["Name"]="Valua",["Min"]=0,["Max"]=10,["Function"]=function(a)end,["Default"]=3})local k={["Enabled"]=false}k=a["ObjectsThatCanBeSaved"]["WorldWindow"]["Api"].CreateOptionsButton({["Name"]="Oldest Texturepack",["Function"]=function(a)Enabled=a;if Enabled then Connection=f.Viewmodel.ChildAdded:Connect(function(a)if a:FindFirstChild("Handle")then pcall(function()a:FindFirstChild("Handle").Size=a:FindFirstChild("Handle").Size/1.5;a:FindFirstChild("Handle").Material=Enum.Material.Neon;a:FindFirstChild("Handle").TextureID=""a:FindFirstChild("Handle").Color=Color3.fromRGB(255,65,65)end)local b=string.lower(a.Name)if b:find("sword")or b:find("blade")then a:FindFirstChild("Handle").MeshId="rbxassetid://11216117592"elseif b:find("snowball")then a:FindFirstChild("Handle").MeshId="rbxassetid://11216343798"end end end)else Connection:Disconnect()end end})local k={["Enabled"]=false}k=a["ObjectsThatCanBeSaved"]["WorldWindow"]["Api"].CreateOptionsButton({["Name"]="Blue shaders",["Function"]=function(a)Enabled=a;if Enabled then Connection=f.Viewmodel.ChildAdded:Connect(function(a)if a:FindFirstChild("Handle")then pcall(function()a:FindFirstChild("Handle").Size=a:FindFirstChild("Handle").Size/1.5;a:FindFirstChild("Handle").Material=Enum.Material.Neon;a:FindFirstChild("Handle").TextureID=""a:FindFirstChild("Handle").Color=Color3.fromRGB(0,150,255)end)local b=string.lower(a.Name)if b:find("sword")or b:find("blade")then a:FindFirstChild("Handle").MeshId="rbxassetid://11216117592"elseif b:find("snowball")then a:FindFirstChild("Handle").MeshId="rbxassetid://11216343798"end end end)else Connection:Disconnect()end end})local k={["Enabled"]=false}k=a["ObjectsThatCanBeSaved"]["WorldWindow"]["Api"].CreateOptionsButton({["Name"]="Player TP",["Function"]=function(a)Enabled=a;if Enabled then game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame=CFrame.new(-1375,9042,2288)wait(1)local a=game.Players:GetPlayers()[math.random(1,#game.Players:GetPlayers())]game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame=CFrame.new(Vector3.new(a.Character.Head.Position.X,a.Character.Head.Position.Y,a.Character.Head.Position.Z))end end})local k={["Enabled"]=false}local l={["Value"]=1}local o={["Value"]=1}local p={["Value"]=1}local q={["Value"]=1}local r={["Enabled"]=false}local s=true;k=a.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({Name="ULTIMATE LAG SPEED",Function=function(a)if a then if k.Enabled then j("Speed","gas gas gas",2)while wait(p.Value/10)do if k.Enabled==false then s=false;game.Players.LocalPlayer.Character.Humanoid.WalkSpeed=16 end;if k.Enabled then s=true end;if k.Enabled and s==true then print("On")game.Players.LocalPlayer.Character.Humanoid.WalkSpeed=o.Value;wait(q.Value-1)game.Players.LocalPlayer.Character.Humanoid.WalkSpeed=l.Value;wait(p.Value/10)print("Off")end;if r.Enabled then print("Sorry")end end end end end})r=k.CreateToggle({["Name"]="Damage spoof",["Function"]=function()end})l=k.CreateSlider({["Name"]="Boost Speed",["Min"]=30,["Max"]=145,["Function"]=function(a)end,["Default"]=65})o=k.CreateSlider({["Name"]="Original Speed",["Min"]=1,["Max"]=50,["Function"]=function(a)end,["Default"]=16})p=k.CreateSlider({["Name"]="Boost Delay",["Min"]=1,["Max"]=9,["Function"]=function(a)end,["Default"]=1})q=k.CreateSlider({["Name"]="Original Delay",["Min"]=1,["Max"]=9,["Function"]=function(a)end,["Default"]=1})n(function()local b;local c=false;local e=false;local f;local h;local i={["Enabled"]=false}i=a["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({["Name"]="Float Disabler Fly",["Function"]=function(a)if a then b=Instance.new("BodyVelocity")b.MaxForce=Vector3.new(0,9e9,0)b.Parent=d.Character:FindFirstChild("HumanoidRootPart")f=g.InputBegan:Connect(function(a)if a.KeyCode==Enum.KeyCode.Space then c=true end;if a.KeyCode==Enum.KeyCode.LeftShift then e=true end end)h=g.InputEnded:Connect(function(a)if a.KeyCode==Enum.KeyCode.Space then c=false end;if a.KeyCode==Enum.KeyCode.LeftShift then e=false end end)spawn(function()repeat task.wait()for a=1,15 do task.wait()if not i["Enabled"]then return end;b.Velocity=Vector3.new(0,a*1.25+(c and 42 or 0)+(e and-42 or 0),0)end;for a=1,15 do task.wait()if not i["Enabled"]then return end;b.Velocity=Vector3.new(0,-a*1+(c and 42 or 0)+(e and-42 or 0),0)end until not i["Enabled"]end)else b:Destroy()f:Disconnect()h:Disconnect()c=false;e=false end end})end)local k={["Enabled"]=false}k=a["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({Name="BoostAirJump",Function=function(a)if a then task.spawn(function()repeat task.wait(0.1)if k.Enabled==false then break end;i.character.HumanoidRootPart.Velocity=i.character.HumanoidRootPart.Velocity+Vector3.new(0,70,0)until k.Enabled==false end)end end,HoverText="Highjump but smooth"})n(function()local b={["Enabled"]=false}b=a["ObjectsThatCanBeSaved"]["WorldWindow"]["Api"].CreateOptionsButton({["Name"]="MultiAura",["Function"]=function(c)if c then task.spawn(function()repeat task.wait(0.03)if(a["ObjectsThatCanBeSaved"]["Lobby CheckToggle"]["Api"]["Enabled"]==false or matchState~=0)and b["Enabled"]then local a=GetAllNearestHumanoidToPosition(true,17.999,1,false)for a,a in pairs(a)do if not h["CheckWhitelisted"](a.Player)then local b=i.character.HumanoidRootPart.Position;local a=a.RootPart.Position;h["ClientHandler"]:Get(h["PaintRemote"]):SendToServer(b,CFrame.lookAt(b,a).lookVector)end end end until b["Enabled"]==false end)end end,["HoverText"]="Attack players around you\nwithout aiming at them."})end)n(function()local b=false;local c={["Enabled"]=false}c=a["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({["Name"]="ReTexture",["Function"]=function(a)if a then b=true;if not game:IsLoaded()then repeat task.wait()until game:IsLoaded()end;local a=syn and syn.request or http and http.request or http_request or fluxus and fluxus.request or request or function(a)if a.Method=="GET"then return{Body=game:HttpGet(a.Url,true),Headers={},StatusCode=200}else return{Body="bad exploit",Headers={},StatusCode=404}end end;local b=syn and syn.set_thread_identity or set_thread_identity or setidentity;local b=syn and syn.get_thread_identity or get_thread_identity or getidentity;local b=getsynasset or getcustomasset;local c={}local c={}local f=function(a)local a,b=pcall(function()return readfile(a)end)return a and b~=nil end;local function g(a)a=a:gsub("<br%s*/>","\n")return(a:gsub("<[^<>]->",""))end;local g={}local function h(c)if not f(c)then task.spawn(function()local a=Instance.new("TextLabel")a.Size=UDim2.new(1,0,0,36)a.Text="Downloading "..c;a.BackgroundTransparency=1;a.TextStrokeTransparency=0;a.TextSize=30;a.Font=Enum.Font.SourceSans;a.TextColor3=Color3.new(1,1,1)a.Position=UDim2.new(0,0,0,-36)a.Parent=game:GetService("CoreGui").RobloxGui;repeat task.wait()until f(c)a:Remove()end)local a=a({Url="https://raw.githubusercontent.com/trollfacenan/bedwarstexture/main/"..c,Method="GET"})writefile(c,a.Body)end;if g[c]==nil then g[c]=b(c)end;return g[c]end;local function b(a)if not c[a]then task.spawn(function()local b=Instance.new("ImageLabel")b.Image=h(a)b.Size=UDim2.new(1,0,1,0)b.ImageTransparency=0.999;b.BackgroundTransparency=1;b.Parent=game:GetService("CoreGui").RobloxGui;repeat task.wait()until b.ContentImageSize~=Vector2.new(0,0)b:Remove()c[a]=1;c[a]=b.ContentImageSize.X/256 end)end end;local function b(b)local a=a({Url="https://api.github.com/repos/trollfacenan/bedwarstexture/contents/"..b,Method="GET"})local a=game:GetService("HttpService"):JSONDecode(a.Body)for a,a in pairs(a)do if a["type"]=="file"then h(b.."/"..a["name"])end end end;if isfolder("bedwarsmodels")==false then makefolder("bedwarsmodels")end;b("bedwarsmodels")if isfolder("bedwarssounds")==false then makefolder("bedwarssounds")end;b("bedwarssounds")local a=require(game:GetService("ReplicatedStorage")["rbxts_include"]["node_modules"]["@flamework"].core.out).Flamework;local b=game.Players.LocalPlayer.PlayerScripts.TS:FindFirstChild("ui")and true or false;repeat task.wait()until a.isInitialized;local a=debug.getupvalue(require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.knit).setup,6)local a=require(game:GetService("ReplicatedStorage").TS.sound["game-sound"]).GameSound;local c=(b and require(game:GetService("ReplicatedStorage")["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out).SoundManager or require(game:GetService("ReplicatedStorage").TS.sound["sound-manager"]).SoundManager)local c=require(game:GetService("ReplicatedStorage").TS.sound["footstep-sounds"])local f=require(game:GetService("ReplicatedStorage").TS.item["item-meta"])local f=debug.getupvalue(f.getItemMeta,1)local g=debug.getupvalue(require(game:GetService("ReplicatedStorage").TS.game.map["map-meta"]).getMapMeta,1)local g=require(game:GetService("ReplicatedStorage").TS.remotes).default;local g=require(game:GetService("ReplicatedStorage").TS["battle-pass"]["battle-pass-utils"]).BattlePassUtils;local g=require(game:GetService("ReplicatedStorage").TS.inventory["inventory-util"]).InventoryUtil;local g=require(game.ReplicatedStorage.TS.entity.entities["inventory-entity"]).InventoryEntity;local g=require(game:GetService("ReplicatedStorage")["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out.client.ui.notifications.components["notification-card"]).NotificationCard;local g=require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers.global.hotbar.ui["hotbar-tile"]).HotbarTile;local i=require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers.global.hotbar.ui["hotbar-open-inventory"]).HotbarOpenInventory;local i=require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers.global.hotbar.ui.party["hotbar-party-section"]).HotbarPartySection;local i=require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers.global.hotbar.ui.spectate["hotbar-spectator-section"]).HotbarSpectatorSection;local i=require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers.global.hotbar.ui["custom-match"]["hotbar-custom-match-section"]).HotbarCustomMatchSection;local j=require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers.games.bedwars.respawn.ui["respawn-timer"])local j=require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers.global.hotbar.ui.healthbar["hotbar-healthbar"]).HotbarHealthbar;local j={closeApp=function()end}if b then j=require(game:GetService("ReplicatedStorage")["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out.client.controllers["app-controller"]).AppController end;local j=function()end;if b then local a=require(game:GetService("ReplicatedStorage").TS["game"]["queue-meta"]).QueueMeta;j=function(b)return a[b]end else j=require(game:GetService("ReplicatedStorage").TS["game"]["queue-meta"]).getQueueMeta end;local j;local j=require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers.global.hotbar.ui["hotbar-app"]).HotbarApp;local j=require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers.global.hotbar.ui["hotbar-app"])local j=require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers.games.bedwars.shop.ui["item-shop"]["bedwars-item-shop-app"])[(b and"BedwarsItemShopAppBase"or"BedwarsItemShopApp")]local j=require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers.games.bedwars["generator-upgrade"].ui["bedwars-team-upgrade-app"]).BedwarsTeamUpgradeApp;local j=require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers["game"].match.ui["victory-section"]).VictorySection;local j=require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers.games.bedwars["battle-pass-progression"].ui["battle-pass-progession-app"]).BattlePassProgressionApp;local j=require(game:GetService("ReplicatedStorage").TS.games.bedwars.shop["bedwars-shop"]).BedwarsShop;local j=require(game:GetService("ReplicatedStorage").TS.games.bedwars["bedwars-bows"]).BedwarsBows;local j=debug.getupvalue(g.render,1)local b=(b and require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.ui.store).ClientStore or require(game.Players.LocalPlayer.PlayerScripts.TS.rodux.rodux).ClientStore)local b=require(game:GetService("ReplicatedStorage").TS.remotes).default.Client;local b=debug.getupvalue(g.render,2)local b=require(game:GetService("ReplicatedStorage").rbxts_include.node_modules["@easy-games"]["game-core"].out).SoundManager;local b=require(game:GetService("Players").LocalPlayer.PlayerScripts.TS.controllers.global.inventory.ui["item-viewport"]).ItemViewport;local b=debug.getupvalue(g.render,6)local b=debug.getupvalue(g.tweenPosition,1)local b=false;local b=""local b=i.render;local b=j.createRef()local b=j.createRef()local b=j.createRef()local b=j.createRef()local b=false;local b=0;c["BlockFootstepSound"][4]="WOOL"c["BlockFootstepSound"]["WOOL"]=4;for a,b in pairs(f)do if tostring(a):match"wool"then b.footstepSound=c["BlockFootstepSound"]["WOOL"]end end;for b,b in pairs(listfiles("bedwarssounds"))do local c=tostring(tostring(b):gsub('bedwarssounds\\',""):gsub(".mp3",""))local d=a[c]if d then a[c]=h(b)end end;for a,a in pairs(listfiles("bedwarsmodels"))do if d.Character then else repeat task.wait()until d.Character end;local b=tostring(tostring(a):gsub('bedwarsmodels\\',""):gsub(".png",""))local c=game:GetService("ReplicatedStorage").Items:FindFirstChild(b)local e=d.Character:FindFirstChild(b)if c then if isfile("bedwarsmodels/"..b..".mesh")then c.Handle.MeshId=h("bedwarsmodels/"..b..".mesh")c.Handle.TextureID=h("bedwarsmodels/"..b..".png")for a,a in pairs(c.Handle:GetDescendants())do if a:IsA("MeshPart")then a.Transparency=1 end end else for b,b in pairs(c:GetDescendants())do if b:IsA("Texture")then b.Texture=h(a)end end end end;if e then if isfile("bedwarsmodels/"..b..".mesh")then e.Handle.MeshId=h("bedwarsmodels/"..b..".mesh")e.Handle.TextureID=h("bedwarsmodels/"..b..".png")for a,a in pairs(c.Handle:GetDescendants())do if a:IsA("MeshPart")then a.Transparency=1 end end else for b,b in pairs(e:GetDescendants())do if b:IsA("Texture")then b.Texture=h(a)end end end end;childaddedcon=d.Character.ChildAdded:Connect(function(c)if e then if isfile("bedwarsmodels/"..b..".mesh")then if not e:FindFirstChild("Handle")then repeat task.wait()until e:FindFirstChild("Handle")end;e.Handle.MeshId=h("bedwarsmodels/"..b..".mesh")e.Handle.TextureID=h("bedwarsmodels/"..b..".png")for a,a in pairs(e.Handle:GetDescendants())do if a:IsA("MeshPart")then a.Transparency=1 end end else for b,b in pairs(e:GetDescendants())do if b:IsA("Texture")then b.Texture=h(a)end end end end end)charaddedcon=d.CharacterAdded:Connect(function()childadded:Disconnect()e=d.Character:FindFirstChild(b)if e then if isfile("bedwarsmodels/"..b..".mesh")then if not e:FindFirstChild("Handle")then repeat task.wait()until e:FindFirstChild("Handle")end;e.Handle.MeshId=h("bedwarsmodels/"..b..".mesh")e.Handle.TextureID=h("bedwarsmodels/"..b..".png")for a,a in pairs(e.Handle:GetDescendants())do if a:IsA("MeshPart")then a.Transparency=1 end end else for b,b in pairs(e:GetDescendants())do if b:IsA("Texture")then b.Texture=h(a)end end end end;childaddedcon=d.Character.ChildAdded:Connect(function(c)if e then if isfile("bedwarsmodels/"..b..".mesh")then if not e:FindFirstChild("Handle")then repeat task.wait()until e:FindFirstChild("Handle")end;e.Handle.MeshId=h("bedwarsmodels/"..b..".mesh")e.Handle.TextureID=h("bedwarsmodels/"..b..".png")for a,a in pairs(e.Handle:GetDescendants())do if a:IsA("MeshPart")then a.Transparency=1 end end else for b,b in pairs(e:GetDescendants())do if b:IsA("Texture")then b.Texture=h(a)end end end end end)end)end;for a,a in pairs(getgc(true))do if type(a)=="table"and rawget(a,"wool_blue")and type(a["wool_blue"])=="table"then for a,b in pairs(a)do if isfile("bedwarsmodels/"..a..".png")then if rawget(b,"block")and rawget(b["block"],"greedyMesh")then if#b["block"]["greedyMesh"]["textures"]>1 and isfile("bedwarsmodels/"..a.."_side_1.png")then for c,d in pairs(b["block"]["greedyMesh"]["textures"])do b["block"]["greedyMesh"]["textures"][c]=h("bedwarsmodels/"..a.."_side_"..c..".png")end else b["block"]["greedyMesh"]["textures"]={[1]=h("bedwarsmodels/"..a..".png")}end;if isfile("bedwars/"..a.."_image.png")then b["image"]=h("bedwarsmodels/"..a.."_image.png")end else b["image"]=h("bedwarsmodels/"..a..".png")end end end end end;for a,a in pairs(e.Map:GetChildren())do if a.Name=="Blocks"and a:IsA("Folder")or a:IsA("Model")then for a,a in pairs(a:GetDescendants())do if isfile("bedwarsmodels/"..a.Name..".png")then for b,b in pairs(a:GetDescendants())do if b:IsA("Texture")then b.Texture=h("bedwarsmodels/"..a.Name..".png")end end end end end end;e.DescendantAdded:Connect(function(a)for b,b in pairs(e.Map:GetChildren())do if b.Name=="Blocks"and b:IsA("Folder")then if a.Parent and isfile("bedwarsmodels/"..a.Name..".png")then for a,a in pairs(b:GetDescendants())do if a:IsA("Texture")then a.Texture=h("bedwarsmodels/"..a.Name..".png")end end;b.DescendantAdded:connect(function(a)if a:IsA("Texture")then a.Texture=h("bedwarsmodels/"..a.Name..".png")end end)end;if a:IsA("Accessory")and isfile("bedwarsmodels/"..a.Name..".mesh")then task.spawn(function()local b=a:WaitForChild("Handle")b.MeshId=h("bedwarsmodels/"..a.Name..".mesh")b.TextureID=h("bedwarsmodels/"..a.Name..".png")for a,a in pairs(b:GetDescendants())do if a:IsA("MeshPart")then a.Transparency=1 end end end)end end end end)else j("ReTexture","Disabled Next Game",10)end end})end)local k=false;n(function()local b={["Enabled"]=false}local e={["Enabled"]=false}local f;local g;b=a["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({["Name"]="FloatDisabler",["Function"]=function(a)if a then local a=getItem("balloon")if a then local a=h["BalloonController"].hookBalloon;local b=h["BalloonController"].enableBalloonPhysics;local c=h["BalloonController"].deflateBalloon;h["BalloonController"].inflateBalloon()h["BalloonController"].enableBalloonPhysics=function()end;h["BalloonController"].deflateBalloon=function()end;h["BalloonController"].hookBalloon=function(c,c,e,e)if tostring(c)==d.Name then e:WaitForChild("Balloon").CFrame=CFrame.new(0,-1995,0)e.Balloon:ClearAllChildren()local c=syn and syn.set_thread_identity or setidentity;c(7)spawn(function()task.wait(0.5)j("FloatDisabler","Disabled float check!",5)k=true end)c(2)h["BalloonController"].hookBalloon=a;h["BalloonController"].enableBalloonPhysics=b end end end;b["ToggleButton"](true)end end,["HoverText"]="Disables float check. You need a balloon"})e=b.CreateToggle({["Name"]="Auto Disable",["Function"]=function(a)if a then f=c.Inventories.DescendantAdded:connect(function(a)if a.Parent.Name==d.Name then if a.Name=="balloon"then repeat task.wait()until getItem("balloon")b["ToggleButton"](false)end end end)else if f then f:Disconnect()end end end})end)local k=false;n(function()local b={["Enabled"]=false}local f={["Enabled"]=false}local g;local i;b=a["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({["Name"]="HangGliderDisabler",["Function"]=function(a)if a then local a=getItem("hang_glider")if a then local a=h["HangGliderController"].onEnable;h["HangGliderController"].canOpenHangGlider=function()return true end;h["HangGliderController"].registerCharacter=function()end;pcall(function()h["HangGliderController"].openHangGlider()end)h["HangGliderController"].closeHangGlider=function()end;h["HangGliderController"].onDisable=function()end;task.spawn(function()task.wait(1)for a,a in pairs(e:FindFirstChild("Gliders"):GetChildren())do if a:IsA("Model")and a.Name=="HangGlider"then a:BreakJoints()for a,a in pairs(a:GetDescendants())do if a:IsA("BasePart")then a.CFrame=CFrame.new(0,-1995,0)end end;a:ClearAllChildren()end end end)h["HangGliderController"].onEnable=function(b,b)local b=syn and syn.set_thread_identity or setidentity;b(7)task.spawn(function()k=true end)b(2)h["HangGliderController"].onEnable=a end end;b["ToggleButton"](true)end end,["HoverText"]="Disables speed check. You need a hang glider"})f=b.CreateToggle({["Name"]="Auto Disable",["Function"]=function(a)if a then g=c.Inventories.DescendantAdded:connect(function(a)if a.Parent.Name==d.Name then if a.Name=="hang_glider"then repeat task.wait()until getItem("hang_glider")b["ToggleButton"](false)end end end)else if g then g:Disconnect()end end end})end)n(function()local b={["Enabled"]=false}b=a["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({["Name"]="30v30AutoWin",["Function"]=function(a)if a then if(matchState==0 or d.Character:FindFirstChildWhichIsA("ForceField"))then spawn(function()j("30v30AutoWin","Activated. Do not spam it",11)local a=game.Players.LocalPlayer.Character;if matchState==0 then repeat task.wait()until matchState~=0 end;local a=game:GetService("ReplicatedStorage"):FindFirstChild("Inventories"):FindFirstChild(game.Players.LocalPlayer.Name):FindFirstChild("wood_pickaxe")local a=game:GetService("ReplicatedStorage"):FindFirstChild("Inventories"):FindFirstChild(game.Players.LocalPlayer.Name):FindFirstChild("wood_sword")local a=game.Players.LocalPlayer.Character;local a=game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")local a;for b,b in pairs(e:GetChildren())do if b.Name=="bed"then if b.Covers.BrickColor~=game.Players.LocalPlayer.Team.TeamColor then game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame=b.CFrame;task.wait(.1)game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame=b.CFrame;task.wait(.1)game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame=b.CFrame+Vector3.new(0,7,0)game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame=b.CFrame+Vector3.new(0,7,0)game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame=b.CFrame+Vector3.new(0,7,0)local c=game.Players.LocalPlayer.Character;repeat task.wait()until b==nil or b.Parent==nil;a=nil end end end;repeat task.wait()until a==nil;for a,a in pairs(game.Players:GetPlayers())do if a.Character and a.Character:FindFirstChild("HumanoidRootPart")then if a.Team~=game.Players.LocalPlayer.Team then while a and a.Character.Humanoid.Health>0 and a.Character.PrimaryPart do task.wait(.2)if game.Players.LocalPlayer.Character~=nil and game.Players.LocalPlayer.Character:FindFirstChild'HumanoidRootPart'then game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame=a.Character.HumanoidRootPart.CFrame end;e.Gravity=196.2 end end end end end)else j("30v30AutoWin","Failed to enable: Please use it during pre-match or during respawn.",11)end;b["ToggleButton"](false)end end})local b={["Enabled"]=false}b=a["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({["Name"]="DuelsAutoWin",["Function"]=function(a)if a then if(matchState==0 or d.Character:FindFirstChildOfClass("ForceField"))then spawn(function()j("DuelsAutoWin","Activated. Do not spam it",11)local a=game.Players.LocalPlayer.Character;if matchState==0 then repeat task.wait()until matchState~=0 end;local a=game:GetService("ReplicatedStorage"):FindFirstChild("Inventories"):FindFirstChild(game.Players.LocalPlayer.Name):FindFirstChild("wood_pickaxe")local a=game:GetService("ReplicatedStorage"):FindFirstChild("Inventories"):FindFirstChild(game.Players.LocalPlayer.Name):FindFirstChild("wood_sword")local a=game.Players.LocalPlayer.Character;local a=game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")local a;for b,b in pairs(e:GetChildren())do if b.Name=="bed"then if b.Covers.BrickColor~=game.Players.LocalPlayer.Team.TeamColor then game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame=b.CFrame;task.wait(.1)game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame=b.CFrame;task.wait(.1)game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame=b.CFrame+Vector3.new(0,7,0)game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame=b.CFrame+Vector3.new(0,7,0)game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame=b.CFrame+Vector3.new(0,7,0)local c=game.Players.LocalPlayer.Character;repeat task.wait()until b==nil or b.Parent==nil;a=nil end end end;repeat task.wait()until a==nil;for a,a in pairs(game.Players:GetPlayers())do if a.Character and a.Character:FindFirstChild("HumanoidRootPart")then if a.Team~=game.Players.LocalPlayer.Team then while a and a.Character.Humanoid.Health>0 and a.Character.PrimaryPart do task.wait(.2)if game.Players.LocalPlayer.Character~=nil and game.Players.LocalPlayer.Character:FindFirstChild'HumanoidRootPart'then game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame=a.Character.HumanoidRootPart.CFrame end;e.Gravity=0 end end end end end)else j("DuelsAutoWin","Failed to enable: Please use it during pre-match or during respawn.",11)end;b["ToggleButton"](false)end end})end)n(function()local b;local c={["Enabled"]=false}c=a["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({["Name"]="InfiniteJump",["HoverText"]="Jump without touching ground",["Function"]=function(a)if a then b=g.InputBegan:Connect(function(a)if a.KeyCode==Enum.KeyCode.Space and not g:GetFocusedTextBox()then if InfHold.Enabled and i.isAlive then repeat d.Character:WaitForChild("Humanoid"):ChangeState("Jumping")task.wait()until not g:IsKeyDown(Enum.KeyCode.Space)or not c.Enabled or not InfHold.Enabled or g:GetFocusedTextBox()else if i.isAlive then d.Character:WaitForChild("Humanoid"):ChangeState("Jumping")end end end end)else if b then b:Disconnect()end end end})InfHold=c.CreateToggle({["Name"]="Hold",["HoverText"]="Hold down space to jump?",["Function"]=function()end})end)n(function()local b={["Enabled"]=false}b=a["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({["Name"]="Purple Antivoid",["HoverText"]="Purple Antivoid",["Function"]=function(a)if a then local a=Instance.new("Part",Workspace)a.Name="AntiVoid"a.Size=Vector3.new(2100,0.5,2000)a.Position=Vector3.new(160.5,25,247.5)a.Transparency=0.4;a.Anchored=true;a.Color=Color3.fromRGB(111,43,150)else game.Workspace.AntiVoid:Destroy()end end})end)local c={["Enabled"]=false}c=a["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({["Name"]="PistonwareAmbience",["Function"]=function(a)if a then local a=game:GetService("Lighting")a.Ambient=Color3.fromRGB(111,43,150)a.ColorShift_Bottom=Color3.fromRGB(111,43,150)a.ColorShift_Top=Color3.fromRGB(111,43,150)a.OutdoorAmbient=Color3.fromRGB(111,43,150)a.ColorShift_Bottom=Color3.fromRGB(111,43,150)a.ColorShift_Top=Color3.fromRGB(111,43,150)local b=Instance.new("Sky")b.Name="loltroll"b.SkyboxBk="http://www.roblox.com/asset/?id=1045964490"b.SkyboxDn="http://www.roblox.com/asset/?id=1045964368"b.SkyboxFt="http://www.roblox.com/asset/?id=1045964655"b.SkyboxLf="http://www.roblox.com/asset/?id=1045964655"b.SkyboxRt="http://www.roblox.com/asset/?id=1045964655"b.SkyboxUp="http://www.roblox.com/asset/?id=1045962969"b.Parent=a else j("PurpleWare","Join A New Match To Reset Skybox And Ambience.",3)end end})n(function()local b={["Enabled"]=false}b=a["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({["Name"]="Heatseeker",["HoverText"]="Turn Off Vape Speed",["Function"]=function(a)speedlol=a;if speedlol then task.wait(2.4)spawn(function()repeat if(not speedlol and not onground)then return end;game.Players.LocalPlayer.Character.Humanoid.WalkSpeed=20;j("PurpleWare","boost",10.7)game.Players.LocalPlayer.Character.Humanoid.WalkSpeed=80;task.wait(0.07)game.Players.LocalPlayer.Character.Humanoid.WalkSpeed=20;task.wait(1)game.Players.LocalPlayer.Character.Humanoid.WalkSpeed=55;task.wait(0.05)game.Players.LocalPlayer.Character.Humanoid.WalkSpeed=20;task.wait(10)until(not speedlol)end)else game.Players.LocalPlayer.Character.Humanoid.WalkSpeed=20 end end})end)n(function()local b={["Enabled"]=false}b=a["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({["Name"]="Chat",["HoverText"]="Moves the Chat",["Function"]=function(a)if a then game:GetService("StarterGui"):SetCore('ChatWindowPosition',UDim2.new(0,0,0.7,0))else game:GetService("StarterGui"):SetCore('ChatWindowPosition',UDim2.new(0,0,0,0))end end})end)local c={["Enabled"]=false}c=a["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({["Name"]="KillFeed",["HoverText"]="Destroys the KillFeed",["Function"]=function(a)if a then game:GetService("Players").LocalPlayer.PlayerGui.KillFeedGui.KillFeedContainer.Visible=false else game:GetService("Players").LocalPlayer.PlayerGui.KillFeedGui.KillFeedContainer.Visible=true end end})local c={["Enabled"]=false}c=a["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({["Name"]="HumanoidRootPart",["HoverText"]="Destroys your HumanoidRootPart",["Function"]=function(a)if a then repeat task.wait()until game:IsLoaded()repeat task.wait()until game:GetService("ReplicatedStorage"):FindFirstChild("Inventories"):FindFirstChild(game.Players.LocalPlayer.Name):FindFirstChild("wood_sword")local a=game.Players.LocalPlayer;local a=a.Character;local b=a.HumanoidRootPart;b.Parent=nil;a:MoveTo(a:GetPivot().p)task.wait()b.Parent=a else j("PurpleWare","Reset to disable",3)end end})local c={["Enabled"]=false}c=a["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({["Name"]="CFrameHighJump",["HoverText"]="DISABLE GRAVITY",["Function"]=function(a)verticalflylol=a;if verticalflylol then Workspace.Gravity=0;d.Character.HumanoidRootPart.CFrame=d.Character.HumanoidRootPart.CFrame+Vector3.new(0,-2,0)spawn(function()repeat if(not verticalflylol)then return end;Workspace.Gravity=0;d.Character.HumanoidRootPart.CFrame=d.Character.HumanoidRootPart.CFrame+Vector3.new(0,5,0)task.wait(0.05)d.Character.HumanoidRootPart.CFrame=d.Character.HumanoidRootPart.CFrame+Vector3.new(0,3,0)until(not verticalflylol)end)else Workspace.Gravity=196.2 end end})n(function()local b={["Enabled"]=false}b=a["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({["Name"]="TestFly",["HoverText"]="Test Fly",["Function"]=function(a)bounceflylol=a;if bounceflylol then trol=Instance.new("BodyVelocity")trol.MaxForce=Vector3.new(0,math.huge,0)trol.Parent=d.Character.HumanoidRootPart;trol.Velocity=Vector3.new(0,0,0)spawn(function()repeat if(not bounceflylol)then return end;d.Character.HumanoidRootPart.CFrame=d.Character.HumanoidRootPart.CFrame+Vector3.new(0,6.5,0)task.wait(0.2)d.Character.HumanoidRootPart.CFrame=d.Character.HumanoidRootPart.CFrame+Vector3.new(0,-5,0)until(not bounceflylol)end)else trol:Destroy()end end})end)n(function()local b={["Enabled"]=true}b=a["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({["Name"]="NameHider",["HoverText"]="Disable TargetHud",["Function"]=function(a)if a then repeat task.wait()until game:IsLoaded()local a={["Name"]="0prime",["UserId"]="239702688"}local b={["Name"]="0prime",["UserId"]="1"}local c=game:GetService("Players").LocalPlayer;local function d(d,e)for f,f in pairs(game:GetService("Players"):GetChildren())do if f~=c then d[e]=d[e]:gsub(f.Name,b["Name"])d[e]=d[e]:gsub(f.DisplayName,b["Name"])d[e]=d[e]:gsub(f.UserId,b["UserId"])else d[e]=d[e]:gsub(f.Name,a["Name"])d[e]=d[e]:gsub(f.DisplayName,a["Name"])d[e]=d[e]:gsub(f.UserId,a["UserId"])end end end;local function a(a)if a:IsA("TextLabel")or a:IsA("TextButton")then d(a,"Text")a:GetPropertyChangedSignal("Text"):connect(function()d(a,"Text")end)end;if a:IsA("ImageLabel")then d(a,"Image")a:GetPropertyChangedSignal("Image"):connect(function()d(a,"Image")end)end end;for b,b in pairs(game:GetDescendants())do a(b)end;game.DescendantAdded:connect(a)else j("Pistonware","Join A New Match To Reset Your Name And Other Names.",3)end end})end)n(function()local b={["Enabled"]=false}b=a["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({["Name"]="Old LongJump",["HoverText"]="LongJump Before Vape Christmas Update",["Function"]=function(a)if a then Workspace.Gravity=10;d.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)d.Character.HumanoidRootPart.CFrame=d.Character.HumanoidRootPart.CFrame+Vector3.new(0,3,0)else Workspace.Gravity=196.2 end end})end)local c={["Enabled"]=false}c=a["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({["Name"]="BedTP",["HoverText"]="TPs To The Nearest Bed",["Function"]=function(a)if a then if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")then local a=math.huge;local b=false;local d=game.Players.LocalPlayer;function GetNearestBedToPosition()for c,c in pairs(game.Workspace:GetChildren())do if c.Name=="bed"and c:FindFirstChild("Covers")and c.Covers.BrickColor~=game.Players.LocalPlayer.Team.TeamColor then if(d.Character.HumanoidRootPart.Position-c.Position).Magnitude<a then a=(d.Character.HumanoidRootPart.Position-c.Position).Magnitude;b=c end end end;return b end;local a=GetNearestBedToPosition().Position;game.Players.LocalPlayer.Character.PrimaryPart.CFrame=CFrame.new(a)+Vector3.new(0,5,0)c["ToggleButton"](false)else c["ToggleButton"](false)end end end})local c={["Enabled"]=false}c=a["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({["Name"]="ExplosionExploit",["HoverText"]="Enable When a TNT Explodes Near You (Use For 0.01 Seconds, Doesn't Work With Speed)",["Function"]=function(a)if a then getgenv().WalkSpeedValue=90;local a=game:service'Players'.LocalPlayer;a.Character.Humanoid:GetPropertyChangedSignal'WalkSpeed':Connect(function()a.Character.Humanoid.WalkSpeed=getgenv().WalkSpeedValue end)a.Character.Humanoid.WalkSpeed=getgenv().WalkSpeedValue else getgenv().WalkSpeedValue=20;local a=game:service'Players'.LocalPlayer;a.Character.Humanoid:GetPropertyChangedSignal'WalkSpeed':Connect(function()a.Character.Humanoid.WalkSpeed=getgenv().WalkSpeedValue end)a.Character.Humanoid.WalkSpeed=getgenv().WalkSpeedValue end end})n(function()local b={["Enabled"]=false}local b={["Enabled"]=false}local c={["Value"]="Normal"}local g={["Value"]=1}local h={["Value"]=1}local k={["Enabled"]=true}local l={["Enabled"]=false}b=a["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({["Name"]="MouseTP",["Function"]=function(a)if a then j("MouseTP","Successfully TP",1)m:BindToHeartbeat("MouseTP",1,function()if i.isAlive and l["Enabled"]and c["Value"]=="SlowTP"then i.character.HumanoidRootPart.Velocity=Vector3.new()end end)if i.isAlive then local a=RaycastParams.new()a.FilterDescendantsInstances={d.Character,f}a.FilterType=Enum.RaycastFilterType.Blacklist;local a=e:Raycast(f.CFrame.p,d:GetMouse().UnitRay.Direction*10000,a)local a=a and a.Position+Vector3.new(0,2,0)if a then if c["Value"]=="Normal"then i.character.HumanoidRootPart.CFrame=CFrame.new(a)b["ToggleButton"](false)else spawn(function()repeat if i.isAlive then local b=(a-i.character.HumanoidRootPart.CFrame.p).Unit;b=b==b and b*(math.clamp((i.character.HumanoidRootPart.CFrame.p-a).magnitude,0,h["Value"]))or Vector3.new()i.character.HumanoidRootPart.CFrame=i.character.HumanoidRootPart.CFrame+Vector3.new(b.X,(k["Enabled"]and b.Y or 0),b.Z)i.character.HumanoidRootPart.Velocity=Vector3.new()if(i.character.HumanoidRootPart.CFrame.p-a).magnitude<=5 then break end end;task.wait(g["Value"]/100)until i.isAlive and(i.character.HumanoidRootPart.CFrame.p-a).magnitude<=5 or(not b["Enabled"])if b["Enabled"]then b["ToggleButton"](false)end end)end else b["ToggleButton"](false)j("ClickTP","No Position Found",1)end else if b["Enabled"]then b["ToggleButton"](false)end end else m:UnbindFromHeartbeat("MouseTP")end end,["HoverText"]="Teleports To Where Your Mouse is"})c=b.CreateDropdown({["Name"]="Method",["List"]={"Normal","SlowTP"},["Function"]=function(a)if h["Object"]then h["Object"].Visible=a=="SlowTP"end;if g["Object"]then g["Object"].Visible=a=="SlowTP"end;if k["Object"]then k["Object"].Visible=a=="SlowTP"end;if l["Object"]then l["Object"].Visible=a=="SlowTP"end end})h=b.CreateSlider({["Name"]="Amount",["Min"]=1,["Max"]=50,["Function"]=function()end})h["Object"].Visible=false;g=b.CreateSlider({["Name"]="Delay",["Min"]=1,["Max"]=50,["Function"]=function()end})g["Object"].Visible=false;k=b.CreateToggle({["Name"]="Vertical",["Default"]=true,["Function"]=function()end})k["Object"].Visible=false;l=b.CreateToggle({["Name"]="No Velocity",["Default"]=true,["Function"]=function()end})l["Object"].Visible=false end)local c={["Enabled"]=false}c=a["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({["Name"]="VClip",["HoverText"]=false,["Function"]=function(a)if a then c["ToggleButton"](false)local a=game.Players.LocalPlayer.Character.HumanoidRootPart.Position.x;local b=game.Players.LocalPlayer.Character.HumanoidRootPart.Position.y;local c=game.Players.LocalPlayer.Character.HumanoidRootPart.Position.z;game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame=CFrame.new(a,b-10,c)j("VClip","Success",1)Vclip["ToggleButton"](false)end end})n(function()local b={["Enabled"]=false}b=a["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({["Name"]="Infinite Yield",["HoverText"]="Loads Infinite Yield",["Function"]=function(a)if a then b["ToggleButton"](false)if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")then loadstring(game:HttpGet(('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'),true))()j("Skid-Ware Private","Loaded Infinite Yield",2)else end end end})end)n(function()local b={["Enabled"]=false}b=a["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({["Name"]="AntiAFK",["HoverText"]="Prevents from being kicked when afk",["Function"]=function(a)if a then getgenv().AntiAFK=true;if getgenv().AntiAFK==true then repeat wait()until game:GetService("Players")repeat wait()until game:GetService("Players").LocalPlayer;local a=getconnections or get_signal_cons;if a then for a,a in pairs(a(game:GetService("Players").LocalPlayer.Idled))do if a["Disable"]then a["Disable"](a)elseif a["Disconnect"]then a["Disconnect"](a)end end end end else getgenv().AntiAFK=false end end})end)local c=game:GetService("Players")local d=game:GetService("ReplicatedStorage")local k=c.LocalPlayer.Name;local l={}l[k]={TagText="PurpleWare Owner",TagColor=Color3.new(61,0,113,1)}local k;local o;local p={}for a,a in pairs(getconnections(d.DefaultChatSystemChatEvents.OnNewMessage.OnClientEvent))do if a.Function and#debug.getupvalues(a.Function)>0 and type(debug.getupvalues(a.Function)[1])=="table"and getmetatable(debug.getupvalues(a.Function)[1])and getmetatable(debug.getupvalues(a.Function)[1]).GetChannel then k=getmetatable(debug.getupvalues(a.Function)[1])o=getmetatable(debug.getupvalues(a.Function)[1]).GetChannel;getmetatable(debug.getupvalues(a.Function)[1]).GetChannel=function(a,b)local a=o(a,b)if a and a.AddMessageToChannel then local b=a.AddMessageToChannel;if p[a]==nil then p[a]=a.AddMessageToChannel end;a.AddMessageToChannel=function(a,d)if d.FromSpeaker and c[d.FromSpeaker]then if l[c[d.FromSpeaker].Name]then d.ExtraData={NameColor=c[d.FromSpeaker].Team==nil and Color3.new(135,206,235)or c[d.FromSpeaker].TeamColor.Color,Tags={table.unpack(d.ExtraData.Tags),{TagColor=l[c[d.FromSpeaker].Name].TagColor,TagText=l[c[d.FromSpeaker].Name].TagText}}}end end;return b(a,d)end end;return a end end end;n(function()local b={["Enabled"]=false}b=a["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({["Name"]="/DIE",["HoverText"]="/die real command",["Function"]=function(a)if a then wait(0.001)local a=game.Players.LocalPlayer.Character.HumanoidRootPart.Position.x;local b=game.Players.LocalPlayer.Character.HumanoidRootPart.Position.y;local c=game.Players.LocalPlayer.Character.HumanoidRootPart.Position.z;game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame=CFrame.new(a,b-10,c)else print("rip lol")end end})end)local c=game.Players.LocalPlayer.Character.HumanoidRootPart;local c=game:GetService("Players").LocalPlayer;local d=debug.getupvalue(require(c.PlayerScripts.TS.knit).setup,6)local d=require(game:GetService("ReplicatedStorage").TS.remotes).default.Client;local k={["Enabled"]=false}d:WaitFor("BedwarsBedBreak"):andThen(function(a)a:Connect(function(a)if k["Enabled"]then local a=a.brokenBedTeam.displayName;if a==c.Team.Name then j("Bed broken!","Your bed got broken LOL",7)end end end)end)d:WaitFor("BedwarsBedBreak"):andThen(function(a)a:Connect(function(a)if k["Enabled"]then if a.player.Name==c.Name then j("Broken bed!","you broke a bed",7)end end end)end)d:WaitFor("EntityDeathEvent"):andThen(function(a)a:Connect(function(a)if k["Enabled"]then if a.player.Name==c.Name then j("LOL!","oof lol",7)end end end)end)d:WaitFor("EntityDeathEvent"):andThen(function(a)a:Connect(function(a)if k["Enabled"]then if a.fromEntity and a.fromEntity==c.Character then local a=b:GetPlayerFromCharacter(a.entityInstance)j("you killed",a.Name.."ez",7)end end end)end)local d=a["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({["Name"]="Notifications",["Function"]=function(a)k["Enabled"]=a end,["HoverText"]="Sends you a notification when certain actions happen (bed brake,kill,ect)"})local d={["Enabled"]=false}d=a["ObjectsThatCanBeSaved"]["WorldWindow"]["Api"].CreateOptionsButton({["Name"]="get ems",["HoverText"]="make take a few times",["Function"]=function(a)if a then spawn(function()game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame=game:GetService("Workspace").ItemDrops.emerald.CFrame end)end end})local d={["Enabled"]=false}d=a["ObjectsThatCanBeSaved"]["WorldWindow"]["Api"].CreateOptionsButton({["Name"]="get dims",["HoverText"]="make take a few times",["Function"]=function(a)if a then spawn(function()game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame=game:GetService("Workspace").ItemDrops.diamond.CFrame end)end end})inffly={["Enabled"]=false}local d;local k;inffly=a["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({["Name"]="azura fly",["Function"]=function(b)if b then c.Character.Archivable=true;local b=c.Character:Clone()b.Name="clonethingy"b:FindFirstChild("HumanoidRootPart").Transparency=1;b.Parent=e;e.Camera.CameraSubject=b.Humanoid;k=Instance.new("Part",e)k.Size=Vector3.new(2048,1,2048)k.CFrame=b.HumanoidRootPart.CFrame*CFrame.new(0,-4,0)k.Anchored=true;k.Transparency=1;k.Name="partthingy"m:BindToHeartbeat("BoostSilentFly",1,function(a)b.HumanoidRootPart.CFrame=CFrame.new(i.character.HumanoidRootPart.CFrame.X,b.HumanoidRootPart.CFrame.Y,i.character.HumanoidRootPart.CFrame.Z)b.HumanoidRootPart.Rotation=i.character.HumanoidRootPart.Rotation end)repeat task.wait(0.001)if inffly["Enabled"]==false then break end;b.HumanoidRootPart.CFrame=CFrame.new(i.character.HumanoidRootPart.CFrame.X,b.HumanoidRootPart.CFrame.Y,i.character.HumanoidRootPart.CFrame.Z)until d==true;local b;local c=tick()task.spawn(function()local c=0;if a["ObjectsThatCanBeSaved"]["SpeedModeDropdown"]["Api"]["Value"]=="CFrame"then local a=true;repeat c=c+1;if i.isAlive then local a=i.character.HumanoidRootPart;if b==nil then b=a.Position.Y end;if not bodyvelo then bodyvelo=Instance.new("BodyVelocity")bodyvelo.MaxForce=vec3(0,1000000,0)bodyvelo.Parent=a;bodyvelo.Velocity=Vector3.zero else bodyvelo.Parent=a end;for a=1,15 do task.wait(0.01)if(not inffly["Enabled"])then break end;bodyvelo.Velocity=vec3(0,a*(infflyhigh["Enabled"]and 2 or 1),0)end;if(not isnetworkowner(a))then break end else break end until(not inffly["Enabled"])else local a=j("inffly","inffly is very cool",5)pcall(function()a:GetChildren()[5].Position=UDim2.new(0,46,0,38)end)end;if inffly["Enabled"]then inffly["ToggleButton"](false)end end)else if e:FindFirstChild("clonethingy")or e:FindFirstChild("partthingy")then e:FindFirstChild("clonethingy"):Destroy()e:FindFirstChild("partthingy"):Destroy()m:UnbindFromHeartbeat("BoostSilentFly")d=true;e.Camera.CameraSubject=c.Character.Humanoid end;if bodyvelo then bodyvelo:Destroy()bodyvelo=nil end end end})infflyhigh=inffly.CreateToggle({["Name"]="High",["Function"]=function()end})youtubedetector=a["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({["Name"]="Youtube detector/star detector",["Function"]=function(a)if a then for a,a in pairs(b:GetChildren())do if a:IsInGroup(4199740)and a:GetRankInGroup(4199740)>=1 then j("Vape","Youtuber found "..a.Name.."("..a.DisplayName..")",20)end end end end})n(function()local b={['Enabled']=false}b=a["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({Name='TeleportRandomBed';Function=function(a)if a then for a,a in pairs(game:GetService('Workspace'):GetChildren())do if a.Name=='bed'and(a:FindFirstChild("Covers").BrickColor~=lPlayer.TeamColor)then for b=1,5 do wait(0.1)lPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame=a.Covers.CFrame*CFrame.new(1,3,-2)end;break end end;b['ToggleButton'](false)end end})end)function GetClosest()local a=nil;local b=21;for c,c in pairs(game:GetService("Players"):GetPlayers())do if c~=lPlayer and isAliveOld(c)then local d=(lPlayer.Character:FindFirstChild("HumanoidRootPart").Position-c.Character:FindFirstChild("HumanoidRootPart").Position).Magnitude;if b>=d then a=c;break end end end;return a end;n(function()local b;local c={['Enabled']=false}c=a["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({Name='TPClosestPlayer';Function=function(a)if a then b=GetClosest()if b~=nil then lPlayer.Character:FindFirstChild('HumanoidRootPart').CFrame=b.Character.HumanoidRootPart.CFrame*CFrame.new(0,3,0)j('Boat Config','waiting 5 seconds for cooldown to not lagback',5)wait(5)b=nil;c['ToggleButton'](false)else j('No Player Found','No Player was found close to you!',5)end end end})end)n(function()local b={['Value']=5}local c={['Enabled']=false}c=a["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({Name='StudForwardTP';HoverText='Teleports you forward amout of studs, useful for catching up with yuzi kit users and pearlers';Function=function(a)if a then lPlayer.Character.HumanoidRootPart.CFrame=lPlayer.Character.HumanoidRootPart.CFrame*CFrame.new(0,3,-b.Value)task.wait(1)if isLagbacking()then j("Stud Teleporter",'Successfully teleported '..tostring(b.Value)..'Studs!',5)else j('Stud Teleporter','Teleport Fail. Lagback Detected So TP Failed!',5)end;c['ToggleButton'](false)end end})b=c.CreateSlider({["Name"]="Stud Amount",["Min"]=1,["Max"]=17,["Function"]=function(a)end,["Default"]=5})end)local d={["Enabled"]=false}d=a["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({["Name"]="PurpleSkybox",["Function"]=function(a)if a then local a=Instance.new("Sky",game.Lighting)a.MoonAngularSize="0"a.MoonTextureId="rbxassetid://6444320592"a.SkyboxBk="rbxassetid://8107841671"a.SkyboxDn="rbxassetid://6444884785"a.SkyboxFt="rbxassetid://8107841671"a.SkyboxLf="rbxassetid://8107841671"a.SkyboxRt="rbxassetid://8107841671"a.SkyboxUp="rbxassetid://8107849791"a.SunTextureId="rbxassetid://6196665106"else local a=Instance.new("Sky",game.Lighting)a.MoonAngularSize="11"a.MoonTextureId="rbxasset://sky/moon.jpg"a.SkyboxBk="rbxassetid://7018684000"a.SkyboxDn="rbxassetid://6334928194"a.SkyboxFt="rbxassetid://7018684000"a.SkyboxLf="rbxassetid://7018684000"a.SkyboxRt="rbxassetid://7018684000"a.SkyboxUp="rbxassetid://7018689553"a.SunTextureId="rbxasset://sky/sun.jpg"a.SunAngularSize="21"end end})local d={["Enabled"]=false}d=a["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({["Name"]="PurpleAmbience",["Function"]=function(a)if a then game.Lighting.ColorCorrection.TintColor=Color3.fromRGB(170,170,255)game.Lighting.Ambient=Color3.fromRGB(170,170,255)game.Lighting.OutdoorAmbient=Color3.fromRGB(170,170,255)else game.Lighting.ColorCorrection.TintColor=Color3.fromRGB(255,255,255)game.Lighting.Ambient=Color3.fromRGB(255,255,255)game.Lighting.OutdoorAmbient=Color3.fromRGB(255,255,255)end end})local d={["Enabled"]=false}d=a["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({["Name"]="BlueAmbience",["Function"]=function(a)if a then game.Lighting.ColorCorrection.TintColor=Color3.fromRGB(0,247,255)game.Lighting.Ambient=Color3.fromRGB(255,60,255)game.Lighting.OutdoorAmbient=Color3.fromRGB(255,60,255)else game.Lighting.ColorCorrection.TintColor=Color3.fromRGB(255,255,255)game.Lighting.Ambient=Color3.fromRGB(255,255,255)game.Lighting.OutdoorAmbient=Color3.fromRGB(255,255,255)end end})local d={["Enabled"]=false}d=a["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({["Name"]="Bhop",["Function"]=function(a)if a then getgenv().bhop=true;while wait(DEL)do if getgenv().bhop==true then game.Players.LocalPlayer.Character.Humanoid.Jump=true end end else getgenv().bhop=false end end})DEL=d.CreateSlider({["Name"]="Delay",["Min"]=0,["Max"]=10,["Default"]=2,["Function"]=function(a)DEL=a end})n(function()local b={["Enabled"]=false}b=a["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({["Name"]="TeleportHighJump",["Function"]=function(a)if a then if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")then local a=game.Players.LocalPlayer.Character.HumanoidRootPart.Position.x;local c=game.Players.LocalPlayer.Character.HumanoidRootPart.Position.y;local d=game.Players.LocalPlayer.Character.HumanoidRootPart.Position.z;game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame=CFrame.new(a,c+Ammounty,d)j("HighJump","Worked ;)",10)b["ToggleButton"](false)else j("HighJump","Failed ;(",10)b["ToggleButton"](false)end end end})Ammounty=b.CreateSlider({["Name"]="Amount",["Min"]=10,["Max"]=25,["Default"]=20,["Function"]=function(a)Ammounty=a end})end)n(function()local b={["Enabled"]=false}b=a["ObjectsThatCanBeSaved"]["WorldWindow"]["Api"].CreateOptionsButton({["Name"]="BedwarsLobby",["HoverText"]="Goes To lobby",["Function"]=function(a)if a then if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")then j("Bedwars","Cya Next Time",3)wait(3.0)game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("/bedwars","All")b["ToggleButton"](false)else j("Bedwars","How did u get this message lol",10)b["ToggleButton"](false)end end end})end)n(function()local b={["Enabled"]=false}b=a["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({["Name"]="DownwardsFly",["HoverText"]="Remake Of PingFly :)",["Function"]=function(a)if a then if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")then h["SoundManager"]:playSound(h["SoundList"]["DAMAGE_"..math.random(1,3)])Game.workspace.Gravity=sexyCorrade;game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame=game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.lookVector*TPSDELAYS;game.Players.LocalPlayer.Character.Humanoid.WalkSpeed=FastFlySpeed;wait(0.4)game.Players.LocalPlayer.Character.Humanoid.WalkSpeed=16;wait(1.0)game.Players.LocalPlayer.Character.Humanoid.WalkSpeed=FastFlySpeed;wait(0.3)game.Players.LocalPlayer.Character.Humanoid.WalkSpeed=16;wait(0.4)Game.workspace.Gravity=192.6;b["ToggleButton"](false)else b["ToggleButton"](false)end end end})FastFlySpeed=b.CreateSlider({["Name"]="Speed",["Min"]=25,["Max"]=30,["Default"]=30,["Function"]=function(a)FastFlySpeed=a end})sexyCorrade=b.CreateSlider({["Name"]="Gravity",["Min"]=1,["Max"]=5,["Default"]=1,["Function"]=function(a)sexyCorrade=a end})TPSDELAYS=b.CreateSlider({["Name"]="TpsAmmount",["Min"]=0,["Max"]=1,["Default"]=1,["Function"]=function(a)TPSDELAYS=a end})end)n(function()local b={["Enabled"]=true}b=a["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({["Name"]="GravityFly",["HoverText"]="Lets you fly",["Function"]=function(a)if a then game.workspace.Gravity=50;game.Players.LocalPlayer.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)wait(GravityFlyTime)game.workspace.Gravity=GravityFlyPart else game.workspace.Gravity=192.6 end end})GravityFlyTime=b.CreateSlider({["Name"]="Delay",["Min"]=0.5,["Max"]=1,["Default"]=1,["Function"]=function(a)GravityFlyTime=a end})GravityFlyPart=b.CreateSlider({["Name"]="Gravity",["Min"]=5,["Max"]=10,["Default"]=5,["Function"]=function(a)GravityFlyPart=a end})end)game.Players.LocalPlayer.character.HumanoidRootPart.Velocity=game.Players.LocalPlayer.character.HumanoidRootPart.Velocity+Vector3.new(0,35,0)local d=game.Players.LocalPlayer;j("PurpleWare","Logged in as "..(d.Name or d.DisplayName),3)j("PurpleWare ","Thank You For Using PurpleWare",3)n(function()local b={["Enabled"]=false}b=a["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({["Name"]="SkywarsMiddle",["HoverText"]="Teleports You To The Middle In Skywars (no game check )",["Function"]=function(a)if a then local a=game:GetService("ReplicatedStorage").rbxts_include.node_modules["@rbxts"].net.out._NetManaged.MatchStateEvent.OnClientEvent:Connect(function()game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame=game:GetService("Workspace").SpectatorPlatform:FindFirstChild("floor").CFrame-Vector3.new(0,15,0)task.wait(.2)game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame=game:GetService("Workspace").SpectatorPlatform:FindFirstChild("floor").CFrame-Vector3.new(0,15,0)end)else TPMiddleCONNECT:Disconnect()end end})end)n(function()local b={["Enabled"]=false}b=a["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({["Name"]="AutoRape",["HoverText"]="Rapes Other Player",["Function"]=function(a)if a then if i.isAlive then m:BindToHeartbeat("AutoRap",1,function()local a=GetAllNearestHumanoidToPosition(true,AutoRapeDist,1000,true)for a,a in pairs(a)do if a~=game:GetService("Players").LocalPlayer then spawn(function()if a~=nil and a.Character then game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame=a.Character:FindFirstChild("HumanoidRootPart").CFrame end end)end end end)end else m:UnbindFromHeartbeat("AutoRap")end end})AutoRapeDist=b.CreateSlider({["Name"]="Rape Distance",["Min"]=5,["Max"]=20,["Default"]=10,["Function"]=function(a)AutoRapeDist=a end})end)n(function()local b={["Enabled"]=false}b=a["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({["Name"]="AutoDeathTP",["HoverText"]="PATCHED",["Function"]=function(a)if a then local a=game.Players.LocalPlayer;m:BindToHeartbeat("AutoDeathTP",1,function()if i.isAlive and game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid")then if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Humanoid").Health<=10 then local b=a.Character:FindFirstChild("HumanoidRootPart").CFrame;a.CharacterAdded:Wait()a.Character:WaitForChild("HumanoidRootPart").CFrame=b end end end)else m:UnbindFromHeartbeat("AutoDeathTP")end end})end)n(function()local b={["Enabled"]=false}b=a["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({["Name"]="SizeChanger",["HoverText"]="Changes The Size Of a Item",["Function"]=function(a)if a then m:BindToHeartbeat("SizeThing",1,function()for a,a in pairs(game:GetService("Workspace").Camera.Viewmodel:GetChildren())do if(a:IsA("Accessory"))then if a:FindFirstChild("Handle").Anchored==true then break else if a:FindFirstChild("Handle")then a.Handle.Size=a.Handle.Size/3;a:FindFirstChild("Handle").Anchored=true end;if a:FindFirstChild("Handle"):FindFirstChild("Neon")then a:FindFirstChild("Handle"):FindFirstChild("Neon"):Destroy()end;if a:FindFirstChild("Handle"):FindFirstChild("gem")then a:FindFirstChild("Handle"):FindFirstChild("gem"):Destroy()end end end end end)else m:UnbindFromHeartbeat("SizeThing")j("PurpleWare","Disabled Next Time You Die",3)end end})end)n(function()local b={["Enabled"]=false}b=a["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({["Name"]="HypixelFly",["HoverText"]="A Fly",["Function"]=function(a)if a then if i.isAlive then local a=game.Players.LocalPlayer.character.HumanoidRootPart.Position.y;if game.Players.LocalPlayer.character.HumanoidRootPart.Position.y==a then game.workspace.Gravity=0;local a=game:GetService("TweenService")for b=1,3 do task.wait()local b=game.Players.LocalPlayer.Character.PrimaryPart.CFrame;local a=a:Create(game.Players.LocalPlayer.Character.PrimaryPart,TweenInfo.new(0.5),{CFrame=b+b.lookVector*10})a:play()a.Completed:Wait()end;repeat task.wait()local a=e:Raycast(i.character.HumanoidRootPart.Position,Vector3.new(0,-32,0),blockraycast)if a then if b["Enabled"]then b["ToggleButton"](false)end end until(not b["Enabled"])end end else game.workspace.Gravity=192.6 end end})end)n(function()local b={["Enabled"]=true}b=a["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({["Name"]="ShortFly",["HoverText"]="For Short Distances [20 Blocks]",["Function"]=function(a)if a then if YlevelTeller["Enabled"]then local a=Instance.new("TextLabel")a.Name="Ylevel"a.Parent=game.CoreGui.RobloxGui;a.BackgroundColor3=Color3.fromRGB(255,255,255)a.BackgroundTransparency=1.000;a.Position=UDim2.new(0.885590136,0,0.916458845,0)a.Size=UDim2.new(0,200,0,50)a.Font=Enum.Font.SourceSans;a.Text="Ylevel  = 1"a.TextColor3=Color3.fromRGB(0,0,0)a.TextSize=28.000;spawn(function()repeat local b=game.Players.LocalPlayer.Character.HumanoidRootPart.Position.y;b=math.floor(b)task.wait(0.1)a.Text="Ylevel = "..b until a.Text==nil end)end;local a=game.Players.LocalPlayer.character.HumanoidRootPart.Position.y;local c=Instance.new("Part",game.workspace)c.Size=Vector3.new(1,1,1)c.Anchored=true;c.Transparency=1;c.CanCollide=false;c.Name="CameraPart"f.CameraSubject=game.workspace.CameraPart;m:BindToHeartbeat("HumanoidToCamera",1,function()local b=game.Players.LocalPlayer.character.HumanoidRootPart.Position;c.Position=Vector3.new(b.x,a,b.z)end)if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")then iea2=0;while iea2<=VelocityHighJumpAmmount do iea2=iea2+1;game.Players.LocalPlayer.character.HumanoidRootPart.Velocity=game.Players.LocalPlayer.character.HumanoidRootPart.Velocity+Vector3.new(0,30,0)end;wait(5)for a,a in pairs(game.CoreGui.RobloxGui:GetChildren())do if a.Name=="Ylevel"then game.CoreGui.RobloxGui.Ylevel:Destroy()else print("no")end end;b["ToggleButton"](false)iea2=iea2+10;if iea2>VelocityHighJumpAmmount then j("PurpleWare ","Please Do Not PressKeys",3)m:UnbindFromHeartbeat("HumanoidToCamera")task.wait(1.7)f.CameraSubject=game.Players.LocalPlayer.character.Humanoid;game.workspace.CameraPart:Destroy()end else b["ToggleButton"](false)end end end})VelocityHighJumpAmmount=b.CreateSlider({["Name"]="Amount",["Min"]=5,["Max"]=20,["Default"]=20,["Function"]=function(a)VelocityHighJumpAmmount=a end})YlevelTeller=b.CreateToggle({["Name"]="Ylevel",["Function"]=function()end,["Default"]=true,["HoverText"]="Ylevel"})end)n(function()function IsMoving()return g:IsKeyDown(Enum.KeyCode.W)or g:IsKeyDown(Enum.KeyCode.A)or g:IsKeyDown(Enum.KeyCode.S)or g:IsKeyDown(Enum.KeyCode.D)end;Longjumpv2=a["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({["Name"]="Longjumpv2",["HoverText"]="this makes me wanna die",["Function"]=function(a)if a then c.character.HumanoidRootPart.Velocity=c.character.HumanoidRootPart.Velocity+Vector3.new(0,100,0)wait(0.3)for a=1,3 do wait(0.4)c.character.HumanoidRootPart.Velocity=c.character.HumanoidRootPart.Velocity+Vector3.new(0,75,0)end;Longjumpv2["ToggleButton"](false)else game.Workspace.Gravity=192.6 end end})end)local d={["Enabled"]=false}local d={["Enabled"]=false}n(function()local b;local f;local g=e.CurrentCamera;b=a["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({["Name"]="FunnyFly",["Function"]=function(a)if a then if d.Enabled then d.ToggleButton(false)end;local a=i.character.HumanoidRootPart.Position.y;f=Instance.new("Part",e)f.Size=Vector3.new(1,1,1)f.Transparency=1;f.Anchored=true;f.CanCollide=false;g.CameraSubject=f;m:BindToHeartbeat("FunnyFlyPart",1,function()local b=i.character.HumanoidRootPart.Position;f.Position=Vector3.new(b.x,a,b.z)end)local a=i.character.HumanoidRootPart.CFrame;i.character.HumanoidRootPart.CFrame=CFrame.new(a.x,300000,a.z)if i.character.HumanoidRootPart.Position.X<50000 then i.character.HumanoidRootPart.CFrame*=CFrame.new(0,100000,0)end else m:UnbindFromHeartbeat("FunnyFlyPart")local a=i.character.HumanoidRootPart.Position;local b=RaycastParams.new()b.FilterType=Enum.RaycastFilterType.Whitelist;b.FilterDescendantsInstances={e.Map}rc=e:Raycast(Vector3.new(a.x,300,a.z),Vector3.new(0,-1000,0),b)if rc and rc.Position then i.character.HumanoidRootPart.CFrame=CFrame.new(rc.Position)*CFrame.new(0,3,0)end;g.CameraSubject=c.Character;f:Destroy()m:BindToHeartbeat("FunnyFlyVeloEnd",1,function()i.character.HumanoidRootPart.Velocity=Vector3.new(0,0,0)i.character.HumanoidRootPart.CFrame=CFrame.new(rc.Position)*CFrame.new(0,3,0)end)task.wait(1)m:UnbindFromHeartbeat("FunnyFlyVeloEnd")end end})end)GrassDetector1=a["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({["Name"]="PurpleWare Owner Detector",["HoverText"]="Sends a Notification when PurpleWare Owner was in the game.",["Function"]=function(a)if a then for a,a in pairs(b:GetChildren())do if a:IsInGroup(17046846)and a:GetRankInGroup(17046846)>=255 then j("PurpleWare","PurpleWare owner main acc "..a.Name.." ("..a.DisplayName..")",20)end end end end})GrassDetector=a["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({["Name"]="PurpleWare Staff Detector",["HoverText"]="Sends a Notification when PurpleWare Staff was in the game.",["Function"]=function(a)if a then for a,a in pairs(b:GetChildren())do if a:IsInGroup(16957160)and a:GetRankInGroup(16957160)>=254 then j("PurpleWare","This may be a PurpleWare staff or Jayyy's alt acc "..a.Name.." ("..a.DisplayName..")",20)end end end end})GrassDetector2=a["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({["Name"]="PurpleWare User Detector",["HoverText"]="Sends a Notification when PurpleWare User was in the game.",["Function"]=function(a)if a then for a,a in pairs(b:GetChildren())do if a:IsInGroup(17046846)and a:GetRankInGroup(17046846)>=1 then j("PurpleWare","This guy is using PurpleWare :) "..a.Name.." ("..a.DisplayName..")",20)end end end end})
+    local oldchanneltab
+    local oldchannelfunc
+    local oldchanneltabs = {}
+
+--// Chat Listener
+for i, v in pairs(getconnections(ReplicatedStorage.DefaultChatSystemChatEvents.OnNewMessage.OnClientEvent)) do
+	if
+		v.Function
+		and #debug.getupvalues(v.Function) > 0
+		and type(debug.getupvalues(v.Function)[1]) == "table"
+		and getmetatable(debug.getupvalues(v.Function)[1])
+		and getmetatable(debug.getupvalues(v.Function)[1]).GetChannel
+	then
+		oldchanneltab = getmetatable(debug.getupvalues(v.Function)[1])
+		oldchannelfunc = getmetatable(debug.getupvalues(v.Function)[1]).GetChannel
+		getmetatable(debug.getupvalues(v.Function)[1]).GetChannel = function(Self, Name)
+			local tab = oldchannelfunc(Self, Name)
+			if tab and tab.AddMessageToChannel then
+				local addmessage = tab.AddMessageToChannel
+				if oldchanneltabs[tab] == nil then
+					oldchanneltabs[tab] = tab.AddMessageToChannel
+				end
+				tab.AddMessageToChannel = function(Self2, MessageData)
+					if MessageData.FromSpeaker and Players[MessageData.FromSpeaker] then
+						if ChatTag[Players[MessageData.FromSpeaker].Name] then
+							MessageData.ExtraData = {
+								NameColor = Players[MessageData.FromSpeaker].Team == nil and Color3.new(135,206,235)
+									or Players[MessageData.FromSpeaker].TeamColor.Color,
+								Tags = {
+									table.unpack(MessageData.ExtraData.Tags),
+									{
+										TagColor = ChatTag[Players[MessageData.FromSpeaker].Name].TagColor,
+										TagText = ChatTag[Players[MessageData.FromSpeaker].Name].TagText,
+									},
+								},
+							}
+						end
+					end
+					return addmessage(Self2, MessageData)
+				end
+			end
+			return tab
+		end
+	end
+end
+
+runcode(function()
+	local anticheat222 = {["Enabled"] = false}
+	anticheat222 = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({
+		["Name"] = "/DIE",
+		["HoverText"] = "/die real command",
+		["Function"] = function(callback)
+			if callback then
+				wait(0.001)
+				local x = game.Players.LocalPlayer.Character.HumanoidRootPart.Position.x
+local y = game.Players.LocalPlayer.Character.HumanoidRootPart.Position.y 
+local z = game.Players.LocalPlayer.Character.HumanoidRootPart.Position.z
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(x,y-10,z)
+			else
+				print ("rip lol")
+			end
+		end 
+	})
+end)
+
+	
+	local hrp = game.Players.LocalPlayer.Character.HumanoidRootPart	
+	
+
+
+	local lplr = game:GetService("Players").LocalPlayer
+local KnitClient = debug.getupvalue(require(lplr.PlayerScripts.TS.knit).setup, 6)
+local Client = require(game:GetService("ReplicatedStorage").TS.remotes).default.Client
+
+
+local notifications = {["Enabled"] = false}
+
+Client:WaitFor("BedwarsBedBreak"):andThen(function(p13)
+	p13:Connect(function(p14)
+		if notifications["Enabled"] then
+			local team = p14.brokenBedTeam.displayName
+			if team == lplr.Team.Name then
+				createwarning("Bed broken!", "Your bed got broken LOL", 7)
+			end
+		end
+	end)
+end)
+
+
+Client:WaitFor("BedwarsBedBreak"):andThen(function(p13)
+	p13:Connect(function(p14)
+		if notifications["Enabled"] then
+			if p14.player.Name == lplr.Name then
+				createwarning("Broken bed!", "you broke a bed", 7)
+			end
+		end
+	end)
+end)
+
+Client:WaitFor("EntityDeathEvent"):andThen(function(p13)
+	p13:Connect(function(p14)
+		if notifications["Enabled"] then
+			if p14.player.Name == lplr.Name then
+				createwarning("LOL!", "oof lol", 7)
+			end
+		end
+	end)
+end)
+
+
+
+Client:WaitFor("EntityDeathEvent"):andThen(function(p6)
+	p6:Connect(function(p7)
+		if notifications["Enabled"] then
+			if p7.fromEntity and p7.fromEntity == lplr.Character then
+				local plr = players:GetPlayerFromCharacter(p7.entityInstance)
+				createwarning("you killed", plr.Name.."ez", 7)
+			end
+		end
+	end)
+end)
+
+local notifications = GuiLibrary["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({
+	["Name"] = "Notifications",
+	["Function"]= function(callback) notifications["Enabled"] = callback end,
+	["HoverText"] = "Sends you a notification when certain actions happen (bed brake,kill,ect)"
+})
+
+youtubedetector = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({
+	["Name"] = "Youtube detector/star detector", 
+	["Function"] = function(callback)
+		if callback then
+			for i, plr in pairs(players:GetChildren()) do
+				if plr:IsInGroup(4199740) and plr:GetRankInGroup(4199740) >= 1 then
+					createwarning("PurpleWare", "Youtuber found " .. plr.Name .. "(" .. plr.DisplayName .. ")", 20)
+					end
+				end
+			end
+		end
+})
+
+--heee
+--OFFICAL APE SRC CODE
+--purple Skybox
+  local skybox11 = {["Enabled"] = false}
+  skybox11 = GuiLibrary["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({
+      ["Name"] = "PurpleSkybox",
+      ["Function"] = function(callback)
+          if callback then
+              local sky = Instance.new("Sky",game.Lighting)
+              sky.MoonAngularSize = "0"
+              sky.MoonTextureId = "rbxassetid://6444320592"
+              sky.SkyboxBk = "rbxassetid://8107841671"
+              sky.SkyboxDn = "rbxassetid://6444884785"
+              sky.SkyboxFt = "rbxassetid://8107841671"
+              sky.SkyboxLf = "rbxassetid://8107841671"
+              sky.SkyboxRt = "rbxassetid://8107841671"
+              sky.SkyboxUp = "rbxassetid://8107849791"
+              sky.SunTextureId = "rbxassetid://6196665106"
+
+          else
+              local sky2 = Instance.new("Sky",game.Lighting)
+              sky2.MoonAngularSize = "11"
+              sky2.MoonTextureId = "rbxasset://sky/moon.jpg"
+              sky2.SkyboxBk = "rbxassetid://7018684000"
+              sky2.SkyboxDn = "rbxassetid://6334928194"
+              sky2.SkyboxFt = "rbxassetid://7018684000"
+              sky2.SkyboxLf = "rbxassetid://7018684000"
+              sky2.SkyboxRt = "rbxassetid://7018684000"
+              sky2.SkyboxUp = "rbxassetid://7018689553"
+              sky2.SunTextureId = "rbxasset://sky/sun.jpg"
+              sky2.SunAngularSize = "21"
+          end
+      end
+  })
+
+      --purple Ambience
+  local Ambience1 = {["Enabled"] = false}
+  Ambience1 = GuiLibrary["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({
+      ["Name"] = "PurpleAmbience",
+      ["Function"] = function(callback)
+          if callback then
+              game.Lighting.ColorCorrection.TintColor = Color3.fromRGB(170, 170, 255)
+              game.Lighting.Ambient = Color3.fromRGB(170, 170, 255)
+              game.Lighting.OutdoorAmbient = Color3.fromRGB(170, 170, 255)
+          else
+              game.Lighting.ColorCorrection.TintColor = Color3.fromRGB(255, 255, 255)
+              game.Lighting.Ambient = Color3.fromRGB(255, 255, 255)
+              game.Lighting.OutdoorAmbient = Color3.fromRGB(255, 255, 255)
+          end
+      end
+  })
+
+  local plr1 = game.Players.LocalPlayer
+createwarning("PurpleWare", "Logged in as "..(plr1.Name or plr1.DisplayName), 3)
+createwarning("PurpleWare ", "Thank You For Using PurpleWare", 3)
+
+--more ape
+--L bozo xv
+runcode(function()
+	local TPMiddle = {["Enabled"] = false}
+	TPMiddle = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({
+		["Name"] = "SkywarsMiddle",
+		["HoverText"] = "Teleports You To The Middle In Skywars (no game check )",
+		["Function"] = function(callback)
+			if callback then
+				local TPMiddleCONNECT = game:GetService("ReplicatedStorage").rbxts_include.node_modules["@rbxts"].net.out._NetManaged.MatchStateEvent.OnClientEvent:Connect(function()
+					game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame = game:GetService("Workspace").SpectatorPlatform:FindFirstChild("floor").CFrame - Vector3.new(0,15,0)
+					task.wait(.2)
+					game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame = game:GetService("Workspace").SpectatorPlatform:FindFirstChild("floor").CFrame - Vector3.new(0,15,0)
+				end)
+			else
+				TPMiddleCONNECT:Disconnect()
+			end
+		end
+	})
+
+end)
+
+runcode(function()
+	local SizeChanger = {["Enabled"] = false}
+    SizeChanger = GuiLibrary["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({
+        ["Name"] = "SizeChanger",
+		["HoverText"] = "Changes The Size Of a Item",
+        ["Function"] = function(callback)
+            if callback then
+				RunLoops:BindToHeartbeat("SizeThing", 1, function()
+					for i, v in pairs(game:GetService("Workspace").Camera.Viewmodel:GetChildren()) do
+						if (v:IsA("Accessory")) then
+							if v:FindFirstChild("Handle").Anchored == true then
+								break
+							else
+								if v:FindFirstChild("Handle") then
+									v.Handle.Size =  v.Handle.Size / 3
+									v:FindFirstChild("Handle").Anchored = true
+								end
+								if v:FindFirstChild("Handle"):FindFirstChild("Neon") then
+									v:FindFirstChild("Handle"):FindFirstChild("Neon"):Destroy()
+								end
+								if v:FindFirstChild("Handle"):FindFirstChild("gem") then
+									v:FindFirstChild("Handle"):FindFirstChild("gem"):Destroy()
+								end
+							end
+						end
+					end
+				end)
+			else
+				RunLoops:UnbindFromHeartbeat("SizeThing")
+				createwarning("PurpleWare", "Disabled Next Time You Die", 3)
+			end
+		end
+	})
+end)
+
+runcode(function()
+	local VelocityHighJump = {["Enabled"] = true}
+    VelocityHighJump = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
+        ["Name"] = "ShortFly",
+		["HoverText"] = "For Short Distances [20 Blocks]",
+        ["Function"] = function(callback)
+            if callback then
+				if YlevelTeller["Enabled"] then
+					local Ylevel = Instance.new("TextLabel")
+                    Ylevel.Name = "Ylevel"
+                    Ylevel.Parent = game.CoreGui.RobloxGui
+                    Ylevel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                    Ylevel.BackgroundTransparency = 1.000
+                    Ylevel.Position = UDim2.new(0.885590136, 0, 0.916458845, 0)
+                    Ylevel.Size = UDim2.new(0, 200, 0, 50)
+                    Ylevel.Font = Enum.Font.SourceSans
+                    Ylevel.Text = "Ylevel  = 1"
+                    Ylevel.TextColor3 = Color3.fromRGB(0, 0, 0)
+                    Ylevel.TextSize = 28.000
+					spawn(function()
+						repeat
+							local YlevelThingy = game.Players.LocalPlayer.Character.HumanoidRootPart.Position.y
+							YlevelThingy = math.floor(YlevelThingy)
+							task.wait(0.1)
+							Ylevel.Text = "Ylevel = "..YlevelThingy
+						until Ylevel.Text == nil
+					end)
+				end
+				local OriginalPosX = game.Players.LocalPlayer.character.HumanoidRootPart.Position.y 
+                local CameraPart = Instance.new("Part", game.workspace)
+				CameraPart.Size = Vector3.new(1,1,1)
+                CameraPart.Anchored = true
+                CameraPart.Transparency = 1
+                CameraPart.CanCollide = false
+                CameraPart.Name = "CameraPart"
+				cam.CameraSubject = game.workspace.CameraPart
+				RunLoops:BindToHeartbeat("HumanoidToCamera", 1, function()
+					local Pos = game.Players.LocalPlayer.character.HumanoidRootPart.Position
+					CameraPart.Position = Vector3.new(Pos.x, OriginalPosX, Pos.z)
+				end)
+				if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+					iea2 = 0
+					while iea2 <= VelocityHighJumpAmmount do
+						iea2 = iea2 + 1
+						game.Players.LocalPlayer.character.HumanoidRootPart.Velocity = game.Players.LocalPlayer.character.HumanoidRootPart.Velocity + Vector3.new(0,30,0)
+					end
+					wait(5)
+					for i , v in pairs(game.CoreGui.RobloxGui:GetChildren()) do
+						if v.Name == "Ylevel" then
+							game.CoreGui.RobloxGui.Ylevel:Destroy()
+						else
+							print("no")
+						end
+					end
+					VelocityHighJump["ToggleButton"](false)
+					iea2 = iea2 + 10
+					if iea2 > VelocityHighJumpAmmount then
+						createwarning("PurpleWare ", "Please Do Not PressKeys", 3)
+						RunLoops:UnbindFromHeartbeat("HumanoidToCamera")
+						task.wait(1.7)
+						cam.CameraSubject = game.Players.LocalPlayer.character.Humanoid
+						game.workspace.CameraPart:Destroy()
+					end
+
+				else
+					VelocityHighJump["ToggleButton"](false)
+				end
+			end
+		end
+	})
+
+	
+	VelocityHighJumpAmmount = VelocityHighJump.CreateSlider({
+		["Name"] = "Amount",
+		["Min"] = 5,
+		["Max"] = 20,
+		["Default"] = 20,
+		["Function"] = function(val)
+			VelocityHighJumpAmmount = val
+		end
+	})
+
+	YlevelTeller = VelocityHighJump.CreateToggle({
+		["Name"] = "Ylevel",
+		["Function"] = function() end, 
+		["Default"] = true,
+		["HoverText"] = "Ylevel"
+	})
+
+end)
+
+local funnyFly = {["Enabled"] = false}
+local funnyAura = {["Enabled"] = false}
+
+runcode(function()
+	local funnyFly 
+	local part
+	local cam = workspace.CurrentCamera
+    funnyFly = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
+        ["Name"] = "FunnyFly",
+        ["Function"] = function(callback)
+            if callback then
+                if funnyAura.Enabled then funnyAura.ToggleButton(false) end
+                local origy = entity.character.HumanoidRootPart.Position.y
+                part = Instance.new("Part", workspace)
+                part.Size = Vector3.new(1,1,1)
+                part.Transparency = 1
+                part.Anchored = true
+                part.CanCollide = false
+                cam.CameraSubject = part
+                RunLoops:BindToHeartbeat("FunnyFlyPart", 1, function()
+                    local pos = entity.character.HumanoidRootPart.Position
+                    part.Position = Vector3.new(pos.x, origy, pos.z)
+                end)
+                local cf = entity.character.HumanoidRootPart.CFrame
+                entity.character.HumanoidRootPart.CFrame = CFrame.new(cf.x, 300000, cf.z)
+                if entity.character.HumanoidRootPart.Position.X < 50000 then 
+                    entity.character.HumanoidRootPart.CFrame *= CFrame.new(0, 100000, 0)
+                end
+            else
+                RunLoops:UnbindFromHeartbeat("FunnyFlyPart")
+                local pos = entity.character.HumanoidRootPart.Position
+                local rcparams = RaycastParams.new()
+                rcparams.FilterType = Enum.RaycastFilterType.Whitelist
+                rcparams.FilterDescendantsInstances = {workspace.Map}
+                rc = workspace:Raycast(Vector3.new(pos.x, 300, pos.z), Vector3.new(0,-1000,0), rcparams)
+                if rc and rc.Position then
+                    entity.character.HumanoidRootPart.CFrame = CFrame.new(rc.Position) * CFrame.new(0,3,0)
+                end
+                cam.CameraSubject = lplr.Character
+                part:Destroy()
+                RunLoops:BindToHeartbeat("FunnyFlyVeloEnd", 1, function()
+                    entity.character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
+                    entity.character.HumanoidRootPart.CFrame = CFrame.new(rc.Position) * CFrame.new(0,3,0)
+                end)
+                task.wait(1)
+                RunLoops:UnbindFromHeartbeat("FunnyFlyVeloEnd")
+                
+            end
+        end
+    })
+end)
+
+GrassDetector1 = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({
+    ["Name"] = "PurpleWare Owner Detector",
+	["HoverText"] = "Sends a Notification when PurpleWare Owner was in the game.", 
+    ["Function"] = function(callback)
+        if callback then
+            for i, plr in pairs(players:GetChildren()) do
+                if plr:IsInGroup(17046846) and plr:GetRankInGroup(17046846) >= 255 then
+                    createwarning("PurpleWare", "PurpleWare owner main acc " .. plr.Name .. " (" .. plr.DisplayName .. ")", 20)
+                    end
+                end
+            end
+        end
+})
+
+
+
+GrassDetector = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({
+    ["Name"] = "PurpleWare Staff Detector",
+	["HoverText"] = "Sends a Notification when PurpleWare Staff was in the game.", 
+    ["Function"] = function(callback)
+        if callback then
+            for i, plr in pairs(players:GetChildren()) do
+                if plr:IsInGroup(17046846) and plr:GetRankInGroup(17046846) >= 254 then
+                    createwarning("PurpleWare", "This may be a PurpleWare staff or Jayyy's alt acc " .. plr.Name .. " (" .. plr.DisplayName .. ")", 20)
+                    end
+                end
+            end
+        end
+})
+
+
+
+GrassDetector2 = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({
+    ["Name"] = "PurpleWare User Detector",
+	["HoverText"] = "Sends a Notification when PurpleWare User was in the game.", 
+    ["Function"] = function(callback)
+        if callback then
+            for i, plr in pairs(players:GetChildren()) do
+                if plr:IsInGroup(17046846) and plr:GetRankInGroup(17046846) >= 1 then
+                    createwarning("PurpleWare", "This guy is using PurpleWare :) " .. plr.Name .. " (" .. plr.DisplayName .. ")", 20)
+                    end
+                end
+            end
+        end
+})
